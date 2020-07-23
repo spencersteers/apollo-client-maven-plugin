@@ -138,17 +138,17 @@ ApolloClient client = ApolloClient.builder()
     .okHttpClient(new OkHttpClient.Builder()
         .addInterceptor(new Interceptor() {
             @Override
-            Response intercept(Interceptor.Chain chain) throws IOException {
-                chain.proceed(chain.request().newBuilder().addHeader("Authorization", "Basic cnllYnJ5ZTpidWJibGVzMTIz").build())
+            okhttp3.Response intercept(Interceptor.Chain chain) throws IOException {
+                return chain.proceed(chain.request().newBuilder().addHeader("Authorization", "Basic cnllYnJ5ZTpidWJibGVzMTIz").build());
             }
         })
         .build())
-    .build()
+    .build();
 
-client.newCall(new GetBooks())
-    .enqueue(new ApolloCall.Callback<GetBooks.Data>() {
+client.query(new GetBooksQuery())
+    .enqueue(new ApolloCall.Callback<GetBooksQuery.Data>() {
 
-    @Override public void onResponse(@NotNull Response<GetBooks.Data> response) {
+    @Override public void onResponse(@NotNull Response<GetBooksQuery.Data> response) {
         ...
     }
 
