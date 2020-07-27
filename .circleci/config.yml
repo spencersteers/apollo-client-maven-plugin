@@ -49,11 +49,11 @@ jobs:
       - run:
           name: Deploy the artifacts to Bintray
           command: |
-            mvn -s ./.circleci/.circleci.settings.xml -DskipTests deploy -P bintray
+            mvn -s ./.circleci/.circleci.settings.xml -DskipTests deploy -Pbintray
       - run:
           name: Deploy the artifacts to Github
           command: |
-            mvn deploy -Dregistry=https://maven.pkg.github.com/aoudiamoncef -Dtoken=${GITHUB_TOKEN}
+            mvn deploy -Dregistry=https://maven.pkg.github.com/aoudiamoncef -Dtoken=${GITHUB_TOKEN} -P!bintray
   sync:
     docker:
       - image: byrnedo/alpine-curl:0.1.8
