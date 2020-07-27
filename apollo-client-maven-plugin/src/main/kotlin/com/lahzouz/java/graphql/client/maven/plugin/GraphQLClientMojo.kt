@@ -4,8 +4,8 @@ import com.apollographql.apollo.compiler.DefaultPackageNameProvider
 import com.apollographql.apollo.compiler.GraphQLCompiler
 import com.apollographql.apollo.compiler.NullableValueType
 import com.apollographql.apollo.compiler.OperationIdGenerator
-import com.apollographql.apollo.compiler.parser.GraphQLDocumentParser
-import com.apollographql.apollo.compiler.parser.Schema
+import com.apollographql.apollo.compiler.parser.graphql.GraphQLDocumentParser
+import com.apollographql.apollo.compiler.parser.introspection.IntrospectionSchema
 import com.lahzouz.java.graphql.client.maven.plugin.Introspection.getIntrospectionSchema
 import org.apache.maven.plugin.AbstractMojo
 import org.apache.maven.plugin.MojoExecutionException
@@ -154,7 +154,9 @@ class GraphQLClientMojo : AbstractMojo() {
             schemaFile = introspectionFile,
             rootPackageName = rootPackageName
         )
-        val graphQLDocumentParser = GraphQLDocumentParser(Schema(introspectionFile), packageNameProvider)
+
+        val introspectionSchema = IntrospectionSchema(introspectionFile)
+        val graphQLDocumentParser = GraphQLDocumentParser(introspectionSchema, packageNameProvider)
         val ir = graphQLDocumentParser.parse(queries)
 
         val compiler = GraphQLCompiler()

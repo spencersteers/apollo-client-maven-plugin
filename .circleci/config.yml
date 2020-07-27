@@ -47,9 +47,13 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
       - run:
-          name: Deploy the artifacts
+          name: Deploy the artifacts to Bintray
           command: |
             mvn -s ./.circleci/.circleci.settings.xml -DskipTests deploy -P bintray
+      - run:
+          name: Deploy the artifacts to Github
+          command: |
+            mvn deploy -Dregistry=https://maven.pkg.github.com/aoudiamoncef -Dtoken=${GITHUB_TOKEN}
   sync:
     docker:
       - image: byrnedo/alpine-curl:0.1.8
@@ -57,7 +61,7 @@ jobs:
       - run:
           name: Sync version Artifacts to Maven Central
           command: |
-            curl -d '{"username": "${SONATYPE_USER_TOKEN}", "password": "${SONATYPE_PASSWORD}"}' -H "Content-Type: application/json" -X POST https://bintray.com/maven_central_sync/sparow199/maven/apollo-client-maven-plugin/3.2.1
+            curl -d '{"username": "${SONATYPE_USER_TOKEN}", "password": "${SONATYPE_PASSWORD}"}' -H "Content-Type: application/json" -X POST https://bintray.com/maven_central_sync/sparow199/maven/apollo-client-maven-plugin/3.2.2
 
 workflows:
   version: 2
