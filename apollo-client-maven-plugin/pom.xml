@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.github.sparow199</groupId>
         <artifactId>apollo-client-maven-plugin-parent</artifactId>
-        <version>3.2.2</version>
+        <version>3.3.0</version>
         <relativePath>..</relativePath>
     </parent>
 
@@ -18,9 +18,9 @@
 
         <maven-plugin.version>3.6.0</maven-plugin.version>
         <maven-project.version>2.2.1</maven-project.version>
-        <apollo-compiler.version>2.2.3</apollo-compiler.version>
-        <httpclient.version>4.5.11</httpclient.version>
-        <okio.version>2.5.0</okio.version>
+        <apollo.version>2.3.0</apollo.version>
+        <httpclient.version>4.5.12</httpclient.version>
+        <okio.version>2.8.0</okio.version>
     </properties>
 
     <name>apollo-client-maven-plugin</name>
@@ -48,7 +48,12 @@
         <dependency>
             <groupId>com.apollographql.apollo</groupId>
             <artifactId>apollo-compiler</artifactId>
-            <version>${apollo-compiler.version}</version>
+            <version>${apollo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.apollographql.apollo</groupId>
+            <artifactId>apollo-api-jvm</artifactId>
+            <version>${apollo.version}</version>
         </dependency>
         <dependency>
             <groupId>com.squareup.okio</groupId>

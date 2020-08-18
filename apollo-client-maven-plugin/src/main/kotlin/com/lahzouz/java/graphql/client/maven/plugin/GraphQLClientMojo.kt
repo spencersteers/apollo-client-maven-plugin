@@ -1,9 +1,11 @@
 package com.lahzouz.java.graphql.client.maven.plugin
 
+import com.apollographql.apollo.api.internal.QueryDocumentMinifier
 import com.apollographql.apollo.compiler.DefaultPackageNameProvider
 import com.apollographql.apollo.compiler.GraphQLCompiler
 import com.apollographql.apollo.compiler.NullableValueType
 import com.apollographql.apollo.compiler.OperationIdGenerator
+import com.apollographql.apollo.compiler.operationoutput.OperationDescriptor
 import com.apollographql.apollo.compiler.parser.graphql.GraphQLDocumentParser
 import com.apollographql.apollo.compiler.parser.introspection.IntrospectionSchema
 import com.lahzouz.java.graphql.client.maven.plugin.Introspection.getIntrospectionSchema
@@ -100,6 +102,9 @@ class GraphQLClientMojo : AbstractMojo() {
     @Parameter(property = "enumAsSealedClassPatternFilters")
     private var enumAsSealedClassPatternFilters: List<String> = emptyList()
 
+    @Parameter(property = "kotlinMultiPlatformProject")
+    private var kotlinMultiPlatformProject: Boolean = false
+
     @Throws(MojoExecutionException::class)
     override fun execute() {
 
@@ -159,6 +164,15 @@ class GraphQLClientMojo : AbstractMojo() {
         val graphQLDocumentParser = GraphQLDocumentParser(introspectionSchema, packageNameProvider)
         val ir = graphQLDocumentParser.parse(queries)
 
+        val operationOutput = ir.operations.map {
+            operationIdGenerator.apply(QueryDocumentMinifier.minify(it.sourceWithFragments), it.filePath) to OperationDescriptor(
+                name = it.operationName,
+                packageName = it.packageName,
+                filePath = it.filePath,
+                source = QueryDocumentMinifier.minify(it.sourceWithFragments)
+            )
+        }.toMap()
+
         val compiler = GraphQLCompiler()
         compiler.write(
             GraphQLCompiler.Arguments(
@@ -169,13 +183,13 @@ class GraphQLClientMojo : AbstractMojo() {
                 useSemanticNaming = useSemanticNaming,
                 generateModelBuilder = generateModelBuilder,
                 useJavaBeansSemanticNaming = useJavaBeansSemanticNaming,
-                packageNameProvider = packageNameProvider,
-                operationIdGenerator = operationIdGenerator,
+                operationOutput = operationOutput,
                 suppressRawTypesWarning = suppressRawTypesWarning,
                 generateKotlinModels = generateKotlinModels,
                 generateAsInternal = generateAsInternal,
                 generateVisitorForPolymorphicDatatypes = generateVisitorForPolymorphicDatatypes,
-                enumAsSealedClassPatternFilters = enumAsSealedClassPatternFilters
+                enumAsSealedClassPatternFilters = enumAsSealedClassPatternFilters,
+                kotlinMultiPlatformProject = kotlinMultiPlatformProject
             )
         )
 
