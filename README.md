@@ -25,7 +25,7 @@ A full usage example can be found in the [test project](https://github.com/sparo
     <dependency>
         <groupId>com.squareup.okio</groupId>
         <artifactId>okio</artifactId>
-        <version>2.5.0</version>
+        <version>2.8.0</version>
     </dependency>
    <!-- Optional, needed only for ANNOTATED nullable type-->
    <dependency>
@@ -105,7 +105,7 @@ All plugin options and their defaults:
 
 Available nullable types:
 
-```java
+```
 ANNOTATED
 APOLLO_OPTIONAL
 GUAVA_OPTIONAL
@@ -129,7 +129,7 @@ define mapping configuration then register your custom adapter:
 </configuration>
 ```
 
-### Using the Client
+### Using Apollo Client
 
 Assuming a file named `src/main/graphql/GetBooks.graphql` is defined that contains a query named `GetBooks` against the given `schema.json`, the following code demonstrates how that query could be executed.
 
@@ -159,7 +159,7 @@ client.query(new GetBooksQuery())
     });
 ```
 
-#### Wrap ApolloCall with a CompletableFuture
+#### Wrap ApolloCall with CompletableFuture
 
 If you miss **apolloCall.execute** method, which execute a query synchronously, you could wrap **apolloCall.enqueue**
 with a CompletableFuture and call **join** method to wait for the response
