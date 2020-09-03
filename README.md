@@ -20,7 +20,7 @@ A full usage example can be found in the [test project](https://github.com/sparo
    <dependency>
        <groupId>com.apollographql.apollo</groupId>
        <artifactId>apollo-runtime</artifactId>
-       <version>2.3.0</version>
+       <version>2.3.1</version>
    </dependency>
     <dependency>
         <groupId>com.squareup.okio</groupId>
@@ -31,12 +31,12 @@ A full usage example can be found in the [test project](https://github.com/sparo
    <dependency>
        <groupId>org.jetbrains</groupId>
        <artifactId>annotations</artifactId>
-       <version>20.0.0</version>
+       <version>20.1.0</version>
    </dependency>
    <dependency>
        <groupId>org.jetbrains.kotlin</groupId>
        <artifactId>kotlin-reflect</artifactId>
-       <version>1.3.72</version>
+       <version>1.4.0</version>
    </dependency>
 </dependencies>
 ```
@@ -47,7 +47,7 @@ A full usage example can be found in the [test project](https://github.com/sparo
 <plugin>
     <groupId>com.github.sparow199</groupId>
     <artifactId>apollo-client-maven-plugin</artifactId>
-    <version>3.3.0</version>
+    <version>3.3.1</version>
     <executions>
         <execution>
             <goals>
