@@ -117,7 +117,7 @@ Properties specified as nullable in the schema will have a java 8 `java.util.opt
 
 #### Custom Types
 
-To use the [Custom Scalar Types](https://github.com/apollographql/apollo-android#custom-scalar-types) you need to 
+To use the [Custom Scalar Types](https://www.apollographql.com/docs/android/essentials/custom-scalar-types/) you need to 
 define mapping configuration then register your custom adapter:  
 
 ```xml
