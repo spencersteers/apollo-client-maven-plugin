@@ -67,7 +67,7 @@ per the value of `introspectionFile`.
 4. Create files for each query you'd like to generate classes for under `src/main/graphql`:
     1. Query file names must match the name of the query they contain
     2. Query files must end with `.graphql`
-    3. Any subdirectories under `src/main/graphql` are treated as extra package names to append to `packageName` in the plugin config.
+    3. Any subdirectories under `src/main/graphql` are treated as extra package names to append to `rootPackageName` in the plugin config.
 5. Run `mvn clean generate-sources` to generate classes for your queries.
 
 ### Configuration Options
