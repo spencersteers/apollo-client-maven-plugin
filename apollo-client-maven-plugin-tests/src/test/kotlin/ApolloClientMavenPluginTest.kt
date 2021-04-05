@@ -5,9 +5,9 @@ import com.apollographql.apollo.api.CustomTypeAdapter
 import com.apollographql.apollo.api.CustomTypeValue
 import com.coxautodev.graphql.tools.SchemaParser
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.lahzouz.java.graphql.client.tests.queries.GetBooksQuery
-import com.lahzouz.java.graphql.client.tests.queries.author.GetAuthorsQuery
-import com.lahzouz.java.graphql.client.tests.type.CustomType
+import com.lahzouz.apollo.graphql.client.queries.GetBooksQuery
+import com.lahzouz.apollo.graphql.client.queries.author.GetAuthorsQuery
+import com.lahzouz.apollo.graphql.client.type.CustomType
 import graphql.schema.GraphQLSchema
 import graphql.servlet.DefaultGraphQLSchemaProvider
 import graphql.servlet.GraphQLInvocationInputFactory
@@ -18,20 +18,13 @@ import io.undertow.servlet.util.ImmediateInstanceFactory
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import java.io.File
 import java.math.BigDecimal
 import java.net.InetSocketAddress
 import javax.servlet.Servlet
 
-/**
- * @author AOUDIA Moncef
- */
 @TestInstance(PER_CLASS)
 class ApolloClientMavenPluginTest {
 
@@ -73,7 +66,7 @@ class ApolloClientMavenPluginTest {
 
         val longCustomTypeAdapter = object : CustomTypeAdapter<Long> {
             override fun encode(value: Long): CustomTypeValue<*> {
-                return value.toString() as CustomTypeValue<String>
+                return CustomTypeValue.fromRawValue(value.toString())
             }
 
             override fun decode(value: CustomTypeValue<*>): Long {
@@ -100,26 +93,28 @@ class ApolloClientMavenPluginTest {
         val data = mapper.readValue(
             OkHttpClient().newCall(Request.Builder().url("http://127.0.0.1:$port/graphql/schema.json").build())
                 .execute()
-                .body()?.byteStream(),
+                .body?.byteStream(),
             Map::class.java
         )
         assertThat(data).isNotEmpty
 
-        File("src/main/graphql/schema.json").writeText(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(data))
+        File("src/main/graphql/books/schema.json").writeText(
+            mapper.writerWithDefaultPrettyPrinter().writeValueAsString(data)
+        )
     }
 
     @Test
     @DisplayName("generated book query returns data")
     fun bookQueryTest() {
         val response = client.query(GetBooksQuery()).toCompletableFuture().join()
-        assertThat(response.data?.get()?.books).isNotEmpty.hasSize(4)
+        assertThat(response.data?.books).isNotEmpty.hasSize(4)
     }
 
     @Test
     @DisplayName("generated author query returns data")
     fun authorQueryTest() {
         val response = client.query(GetAuthorsQuery()).toCompletableFuture().join()
-        assertThat(response.data?.get()?.authors).isNotEmpty.hasSize(2)
+        assertThat(response.data?.authors).isNotEmpty.hasSize(2)
     }
 
     private fun createServlet(schema: GraphQLSchema): SimpleGraphQLHttpServlet {

@@ -1,0 +1,5 @@
+query GetGhost {
+    ghosts {
+        name
+    }
+}

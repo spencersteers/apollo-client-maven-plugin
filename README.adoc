@@ -1,0 +1,289 @@
+= Apollo GraphQL Client Code Generation Maven Plugin
+
+:project-owner:      aoudiamoncef
+:project-name:       apollo-client-maven-plugin
+:project-groupId:    com.github.aoudiamoncef
+:project-artifactId: apollo-client-maven-plugin-parent
+:project-version:    4.0.0
+
+image:https://github.com/{project-owner}/{project-name}/workflows/Build/badge.svg["Build Status", link="https://github.com/{project-owner}/{project-name}/actions"]
+image:https://img.shields.io/maven-central/v/{project-groupId}/{project-artifactId}.svg[Download, link="https://search.maven.org/#search|ga|1|g:{project-groupId} AND a:{project-artifactId}"]
+image:https://snyk.io/test/github/{project-owner}/{project-name}/badge.svg[Known Vulnerabilities,link=https://snyk.io/test/github/{project-owner}/{project-name}]
+image:https://img.shields.io/badge/License-MIT-yellow.svg[License: MIT,link=https://opensource.org/licenses/MIT]
+
+== Usage
+
+* A simple usage example can be found in https://github.com/{project-owner}/{project-name}/tree/master/apollo-client-maven-plugin-tests[plugin tests]
+
+* A complete project with https://github.com/{project-owner}/spring-boot-apollo-graphql[Spring Boot]
+
+=== Getting Started
+
+. Add the apollo runtime library to your project's dependencies:
++
+[source,xml]
+----
+<dependencies>
+   <dependency>
+       <groupId>com.apollographql.apollo</groupId>
+       <artifactId>apollo-runtime</artifactId>
+       <version>2.5.5</version>
+   </dependency>
+   <!-- Optional, needed only for ANNOTATED nullable type-->
+   <dependency>
+       <groupId>org.jetbrains</groupId>
+       <artifactId>annotations</artifactId>
+       <version>20.1.0</version>
+   </dependency>
+</dependencies>
+----
+
+. Add the code generator plugin to your project's build:
++
+[source,xml, subs="attributes+"]
+----
+<plugins>
+    <plugin>
+        <groupId>com.github.aoudiamoncef</groupId>
+        <artifactId>apollo-client-maven-plugin</artifactId>
+        <version>{project-version}</version>
+        <executions>
+            <execution>
+                <goals>
+                    <goal>generate</goal>
+                </goals>
+               <services>
+                   <example-api>
+                       <compilationUnit>
+                           <name>example</name>
+                           <compilerParams>
+                                <rootPackageName>com.example.graphql.client</rootPackageName>
+                           </compilerParams>
+                       </compilationUnit>
+                   </example-api>
+               </services>
+            </execution>
+        </executions>
+    </plugin>
+</plugins>
+----
+
+. Create a file `src/main/graphql/schema.json` with the JSON results of an https://gist.github.com/aoudiamoncef/a59527016e16a2d56309d62e01ff2348[introspection query], OR you can automatically generate this file by setting `introspection.enabled` to true and `endpointUrl` to your GraphQL endpoint.
+At build time, the plugin will query the server and install this file per the value of `schemaFile`.
+. Create files for each query you'd like to generate classes for under `src/main/graphql`:
+ .. Query file names must match the name of the query they contain
+ .. Query files must end with `.graphql` OR `.gql` by default.
+ .. Any subdirectories under `src/main/graphql` are treated as extra package names to append to `rootPackageName` in the plugin config.
+. Run `mvn generate-sources` to generate classes for your queries.
+
+=== Configuration Options
+
+All plugin configuration properties and their defaults:
+
+[source,xml]
+----
+<configuration>
+    <services>
+        <!--Complete default configuration-->
+        <lahzouz-complete-api>
+            <enabled>true</enabled>
+            <addSourceRoot>true</addSourceRoot>
+            <sourceFolder>${project.basedir}/src/main/graphql/lahzouz</sourceFolder>
+            <schemaPath>${project.basedir}/src/main/graphql/lahzouz/schema.json</schemaPath>
+            <includes>
+                <include>**/*.graphql</include>
+                <include>**/*.gql</include>
+                <include>**/*.json</include>
+                <include>**/*.sdl"</include>
+            </includes>
+            <excludes></excludes>
+
+            <compilationUnit>
+                <name>lahzouz</name>
+                <outputDirectory>
+                    ${project.build.directory}/generated-sources/graphql-client/lahzouz/
+                </outputDirectory>
+                <generateOperationDescriptors>false</generateOperationDescriptors>
+                <operationOutputFile>
+                    ${project.build.directory}/generated/operationOutput/apollo/lahzouz/operationOutput.json
+                </operationOutputFile>
+
+                <compilerParams>
+                    <rootFolders>
+                        <rootFolder>${project.basedir}/src/main/graphql/lahzouz/</rootFolder>
+                    </rootFolders>
+                    <generateKotlinModels>false</generateKotlinModels>
+                    <warnOnDeprecatedUsages>true</warnOnDeprecatedUsages>
+                    <failOnWarnings>false</failOnWarnings>
+                    <generateOperationOutput>true</generateOperationOutput>
+                    <customTypeMapping></customTypeMapping>
+                    <operationIdGeneratorClass>
+                        com.apollographql.apollo.compiler.OperationIdGenerator$Sha256
+                    </operationIdGeneratorClass>
+                    <suppressRawTypesWarning>false</suppressRawTypesWarning>
+                    <useSemanticNaming>true</useSemanticNaming>
+                    <nullableValueType>ANNOTATED</nullableValueType>
+                    <generateModelBuilder>false</generateModelBuilder>
+                    <useJavaBeansSemanticNaming>false</useJavaBeansSemanticNaming>
+                    <generateVisitorForPolymorphicDatatypes>false</generateVisitorForPolymorphicDatatypes>
+                    <rootPackageName>com.lahzouz.graphql.client.lahzouz</rootPackageName>
+                    <packageName></packageName>
+                    <generateAsInternal>false</generateAsInternal>
+                    <sealedClassesForEnumsMatching></sealedClassesForEnumsMatching>
+                    <generateApolloMetadata>false</generateApolloMetadata>
+                    <metadataOutputFile>
+                        ${project.build.directory}/generated/metadata/apollo/lahzouz/metadata.json
+                    </metadataOutputFile>
+                    <alwaysGenerateTypesMatching></alwaysGenerateTypesMatching>
+                    <kotlinMultiPlatformProject>false</kotlinMultiPlatformProject>
+                </compilerParams>
+            </compilationUnit>
+
+            <introspection>
+                <enabled>false</enabled>
+                <endpointUrl></endpointUrl>
+                <headers></headers>
+                <schemaFile>${project.basedir}/src/main/graphql/lahzouz/schema.json</schemaFile>
+                <connectTimeoutSeconds>10</connectTimeoutSeconds>
+                <readTimeoutSeconds>10</readTimeoutSeconds>
+                <writeTimeoutSeconds>10</writeTimeoutSeconds>
+                <useSelfSignedCertificat>false</useSelfSignedCertificat>
+                <useGzip>false</useGzip>
+                <prettyPrint>false</prettyPrint>
+            </introspection>
+        </lahzouz-complete-api>
+
+        <!--Minimal configuration-->
+        <lahzouz-min-api>
+            <compilationUnit>
+                <name>lahzouz</name>
+            </compilationUnit>
+        </lahzouz-min-api>
+
+        <!--Auto configuration-->
+        <lahzouz-auto-api></lahzouz-auto-api>
+    </services>
+</configuration>
+----
+
+==== Nullable Types
+
+Available nullable types:
+[source]
+----
+ANNOTATED
+APOLLO_OPTIONAL
+GUAVA_OPTIONAL
+JAVA_OPTIONAL
+INPUT_TYPE
+----
+
+Properties specified as nullable or not in the schema will be annotated with `org.jetbrains:annotations`.
+
+==== Custom Types
+
+To use https://www.apollographql.com/docs/android/essentials/custom-scalar-types/[custom Scalar Types] you need to
+define mapping configuration then register your custom adapter:
+
+[source,xml]
+----
+<configuration>
+    ...
+    <customTypeMap>
+        <Long>java.time.LocalDate</Long>
+    </customTypeMap>
+    ...
+</configuration>
+----
+
+Implemenatation of a custom adapter for `java.time.LocalDate`:
+
+[source,java]
+----
+public class DateGraphQLAdapter implements CustomTypeAdapter<Date> {
+
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
+	@SneakyThrows
+	@Override
+	public Date decode(@NotNull final CustomTypeValue<?> customTypeValue) {
+		return DATE_FORMAT.parse(customTypeValue.value.toString());
+	}
+
+	@NotNull
+	@Override
+	public CustomTypeValue<?> encode(final Date date) {
+		return new CustomTypeValue.GraphQLString(DATE_FORMAT.format(date));
+	}
+}
+----
+
+=== Using Apollo Client
+
+Assuming a file named `src/main/graphql/GetBooks.graphql` is defined that contains a query named `GetBooks` against the given `schema.json`, the following code demonstrates how that query could be executed.
+
+[source,java]
+----
+ApolloClient client = ApolloClient.builder()
+    .serverUrl("https://example.com/graphql")
+    .addCustomTypeAdapter(CustomType.DATE, new DateGraphQLAdapter())
+    .okHttpClient(new OkHttpClient.Builder()
+        .addInterceptor(new Interceptor() {
+            @Override
+            okhttp3.Response intercept(Interceptor.Chain chain) throws IOException {
+                return chain.proceed(chain.request().newBuilder().addHeader("Authorization", "Basic cnllYnJ5ZTpiVarArsVzMTIz").build());
+            }
+        })
+        .build())
+    .build();
+
+client.query(new GetBooksQuery())
+    .enqueue(new ApolloCall.Callback<GetBooksQuery.Data>() {
+
+    @Override public void onResponse(@NotNull Response<GetBooksQuery.Data> response) {
+        ...
+    }
+
+    @Override public void onFailure(@NotNull ApolloException t) {
+        ...
+    }
+    });
+----
+
+==== Wrap ApolloCall with CompletableFuture
+
+If you miss *apolloCall.execute* method, which execute a query synchronously, you could wrap *apolloCall.enqueue* with a CompletableFuture and call *join* method to wait for the response
+
+[source,java]
+----
+public class ApolloClientUtils {
+
+    public static <T> CompletableFuture<Response<T>> toCompletableFuture(ApolloCall<T> apolloCall) {
+        CompletableFuture<Response<T>> completableFuture = new CompletableFuture<>();
+
+        completableFuture.whenComplete((tResponse, throwable) -> {
+            if (completableFuture.isCancelled()) {
+                completableFuture.cancel(true);
+            }
+        });
+
+        apolloCall.enqueue(new ApolloCall.Callback<T>() {
+            @Override
+            public void onResponse(@NotNull Response<T> response) {
+                completableFuture.complete(response);
+            }
+
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                completableFuture.completeExceptionally(e);
+            }
+        });
+
+        return completableFuture;
+    }
+}
+----
+
+==== Using Apollo without `apollo-runtime`
+
+See https://www.apollographql.com/docs/android/advanced/no-runtime/[documentation]

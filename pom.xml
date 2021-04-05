@@ -2,35 +2,97 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.sparow199</groupId>
+    <groupId>com.github.aoudiamoncef</groupId>
     <artifactId>apollo-client-maven-plugin-parent</artifactId>
-    <version>3.3.1</version>
+    <version>4.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>apollo-client-maven-plugin-parent</name>
     <description>Parent Pom for Apollo GraphQL Client Maven Plugin</description>
     <url>https://github.com/aoudiamoncef/apollo-client-maven-plugin</url>
+    <inceptionYear>2017</inceptionYear>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <kotlin.version>1.4.0</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
+        <kotlin.version>1.4.31</kotlin.version>
         <java.version>1.8</java.version>
-
         <!--This contends with dokka and creates two javadoc jars...-->
         <maven.javadoc.skip>true</maven.javadoc.skip>
 
-        <formatter-maven-plugin.version>2.11.0</formatter-maven-plugin.version>
-        <impsort-maven-plugin.version>1.4.1</impsort-maven-plugin.version>
+        <project.identifier>apollo-client-maven-plugin</project.identifier>
+        <project.github.repository>aoudiamoncef/apollo-client-maven-plugin</project.github.repository>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <nexus.url>https://s01.oss.sonatype.org</nexus.url>
+        <repository.url>git@github.com:${project.github.repository}.git</repository.url>
 
-        <project.scm.id>Github</project.scm.id>
-        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <dokka-maven-plugin.version>0.9.17</dokka-maven-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <ktlint-maven-plugin.version>1.5.2</ktlint-maven-plugin.version>
-        <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
+        <apollo-client-maven-plugin.version>4.0.0-SNAPSHOT</apollo-client-maven-plugin.version>
+
+        <annotations.version>20.1.0</annotations.version>
+        <ant.version>1.10.9</ant.version>
+        <apollo.version>2.5.5</apollo.version>
+        <assertj-core.version>3.19.0</assertj-core.version>
+        <graphql-java-servlet.version>6.1.3</graphql-java-servlet.version>
+        <graphql-java-tools.version>5.2.4</graphql-java-tools.version>
+        <jackson-databind.version>2.12.2</jackson-databind.version>
+        <junit.jupiter.version>5.7.0</junit.jupiter.version>
+        <moshi.version>1.12.0</moshi.version>
+        <okhttp.version>4.9.0</okhttp.version>
+        <okio.version>2.9.0</okio.version>
+        <slf4j-simple.version>1.7.30</slf4j-simple.version>
+        <undertow.version>2.2.7.Final</undertow.version>
+
+        <maven-project.version>2.2.1</maven-project.version>
+        <maven.version>3.8.1</maven.version>
+        <version.annotations.plugin>3.6.0</version.annotations.plugin>
+        <version.dokka.plugin>0.9.17</version.dokka.plugin>
+        <version.formatter.plugin>2.11.0</version.formatter.plugin>
+        <version.impsort.plugin>1.4.1</version.impsort.plugin>
+        <version.ktlint.plugin>1.8.0</version.ktlint.plugin>
+        <version.site.plugin>3.9.1</version.site.plugin>
+        <version.antrun.plugin>3.0.0</version.antrun.plugin>
+        <version.clean.plugin>3.1.0</version.clean.plugin>
+        <version.compiler.plugin>3.8.1</version.compiler.plugin>
+        <version.dependency.plugin>3.1.2</version.dependency.plugin>
+        <version.deploy.plugin>3.0.0-M1</version.deploy.plugin>
+        <version.directory.plugin>0.3.1</version.directory.plugin>
+        <version.enforcer.plugin>3.0.0-M3</version.enforcer.plugin>
+        <version.failsafe.plugin>3.0.0-M5</version.failsafe.plugin>
+        <version.git.plugin>4.0.4</version.git.plugin>
+        <version.gpg.plugin>1.6</version.gpg.plugin>
+        <version.install.plugin>3.0.0-M1</version.install.plugin>
+        <version.jar.plugin>3.2.0</version.jar.plugin>
+        <version.javadoc.plugin>3.2.0</version.javadoc.plugin>
+        <version.license.plugin>4.0.rc2</version.license.plugin>
+        <version.nexus.plugin>1.6.8</version.nexus.plugin>
+        <version.plugin-plugin.version>3.6.0</version.plugin-plugin.version>
+        <version.resources.plugin>3.2.0</version.resources.plugin>
+        <version.source.plugin>3.2.1</version.source.plugin>
+        <version.surefire.plugin>3.0.0-M5</version.surefire.plugin>
+        <version.versions.plugin>2.8.1</version.versions.plugin>
     </properties>
+
+    <developers>
+        <developer>
+            <name>Andrew Potter</name>
+            <email>Andrew.Potter@coxautoinc.com</email>
+            <organization>Cox Automotive</organization>
+            <organizationUrl>https://www.coxautoinc.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Moncef AOUDIA</name>
+            <email>mf.aoudia@gmail.com</email>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
 
     <scm>
         <connection>scm:git:https://github.com/aoudiamoncef/apollo-client-maven-plugin.git</connection>
@@ -45,26 +107,270 @@
         <module>apollo-client-maven-plugin-tests</module>
     </modules>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.ant</groupId>
+                <artifactId>ant</artifactId>
+                <version>${ant.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-api</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugin-tools</groupId>
+                <artifactId>maven-plugin-annotations</artifactId>
+                <version>${version.annotations.plugin}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-project</artifactId>
+                <version>${maven-project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apollographql.apollo</groupId>
+                <artifactId>apollo-runtime</artifactId>
+                <version>${apollo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains</groupId>
+                <artifactId>annotations</artifactId>
+                <version>${annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apollographql.apollo</groupId>
+                <artifactId>apollo-compiler</artifactId>
+                <version>${apollo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apollographql.apollo</groupId>
+                <artifactId>apollo-api-jvm</artifactId>
+                <version>${apollo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.moshi</groupId>
+                <artifactId>moshi-kotlin</artifactId>
+                <version>${moshi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okio</groupId>
+                <artifactId>okio</artifactId>
+                <version>${okio.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson-databind.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-jdk8</artifactId>
+                <version>${kotlin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib</artifactId>
+                <version>${kotlin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-test-junit</artifactId>
+                <version>${kotlin.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.graphql-java</groupId>
+                <artifactId>graphql-java-tools</artifactId>
+                <version>${graphql-java-tools.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-reflect</artifactId>
+                <version>${kotlin.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.graphql-java</groupId>
+                <artifactId>graphql-java-servlet</artifactId>
+                <version>${graphql-java-servlet.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.undertow</groupId>
+                <artifactId>undertow-core</artifactId>
+                <version>${undertow.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj-core.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.undertow</groupId>
+                <artifactId>undertow-servlet</artifactId>
+                <version>${undertow.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j-simple.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-reflect</artifactId>
-            <version>${kotlin.version}</version>
         </dependency>
     </dependencies>
 
     <build>
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.github.aoudiamoncef</groupId>
+                    <artifactId>apollo-client-maven-plugin</artifactId>
+                    <version>${apollo-client-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jetbrains.kotlin</groupId>
+                    <artifactId>kotlin-maven-plugin</artifactId>
+                    <version>${kotlin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>${version.plugin-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.mycila</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>${version.license.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>${version.antrun.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${version.clean.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${version.compiler.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${version.dependency.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${version.deploy.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${version.enforcer.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${version.failsafe.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${version.gpg.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${version.install.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${version.jar.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${version.javadoc.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${version.resources.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${version.source.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${version.surefire.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>${version.versions.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${version.site.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.commonjava.maven.plugins</groupId>
+                    <artifactId>directory-maven-plugin</artifactId>
+                    <version>${version.directory.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>${version.nexus.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>pl.project13.maven</groupId>
+                    <artifactId>git-commit-id-plugin</artifactId>
+                    <version>${version.git.plugin}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -73,7 +379,11 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
+                <configuration>
+                    <args>
+                        <arg>-Xuse-ir</arg>
+                    </args>
+                </configuration>
                 <executions>
                     <execution>
                         <id>compile</id>
@@ -87,7 +397,64 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>${maven-site-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Build-Jdk>${java.version} (${java.vendor} ${java.vm.version})</Build-Jdk>
+                            <Build-Timestamp>${git.build.time}</Build-Timestamp>
+                            <Build-Revision>${git.commit.id}</Build-Revision>
+                            <Build-OS>${os.name} ${os.arch} ${os.version}</Build-OS>
+                        </manifestEntries>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.commonjava.maven.plugins</groupId>
+                <artifactId>directory-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>resolve-rootdir</id>
+                        <goals>
+                            <goal>highest-basedir</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <property>rootdir</property>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>resolve-git-properties</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <verbose>false</verbose>
+                            <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                            <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                            <generateGitPropertiesFilename>${project.build.directory}/git.properties
+                            </generateGitPropertiesFilename>
+                            <dateFormat>yyyy-MM-dd'T'HH:mm:ssXXX</dateFormat>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -97,10 +464,26 @@
             <plugin>
                 <groupId>com.github.gantsign.maven</groupId>
                 <artifactId>ktlint-maven-plugin</artifactId>
-                <version>${ktlint-maven-plugin.version}</version>
+                <version>${version.ktlint.plugin}</version>
             </plugin>
         </plugins>
     </reporting>
+
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <url>${nexus.url}/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>${nexus.url}/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <site>
+            <id>apollo-client-maven-plugin</id>
+            <url>scm:git:ssh://git@github.com/${project.github.repository}.git</url>
+        </site>
+
+    </distributionManagement>
 
     <profiles>
         <profile>
@@ -116,7 +499,7 @@
                     <plugin>
                         <groupId>com.github.gantsign.maven</groupId>
                         <artifactId>ktlint-maven-plugin</artifactId>
-                        <version>${ktlint-maven-plugin.version}</version>
+                        <version>${version.ktlint.plugin}</version>
                         <executions>
                             <execution>
                                 <id>format</id>
@@ -143,7 +526,7 @@
                     <plugin>
                         <groupId>com.github.gantsign.maven</groupId>
                         <artifactId>ktlint-maven-plugin</artifactId>
-                        <version>${ktlint-maven-plugin.version}</version>
+                        <version>${version.ktlint.plugin}</version>
                         <executions>
                             <execution>
                                 <id>check</id>
@@ -156,28 +539,34 @@
                 </plugins>
             </build>
         </profile>
+
         <profile>
-            <id>bintray</id>
+            <id>publication</id>
+            <activation>
+                <property>
+                    <name>release</name>
+                </property>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>${maven-source-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
-                                <phase>package</phase>
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
+                                <configuration>
+                                    <attach>true</attach>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.jetbrains.dokka</groupId>
                         <artifactId>dokka-maven-plugin</artifactId>
-                        <version>${dokka-maven-plugin.version}</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -190,53 +579,87 @@
                 </plugins>
             </build>
         </profile>
+
+        <profile>
+            <id>gpg</id>
+            <activation>
+                <property>
+                    <name>release</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <phase>verify</phase>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>remote-deploy</id>
+            <activation>
+                <property>
+                    <name>release</name>
+                </property>
+            </activation>
+            <build>
+                <defaultGoal>deploy</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>central</serverId>
+                            <nexusUrl>${nexus.url}</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>local-deploy</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <altDeploymentRepository>local::file:${local.repository.path}</altDeploymentRepository>
+            </properties>
+            <build>
+                <defaultGoal>deploy</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${local.repository.path}</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>jcenter</id>
-            <name>JCenter</name>
-            <url>https://jcenter.bintray.com/</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <developers>
-        <developer>
-            <name>Andrew Potter</name>
-            <email>Andrew.Potter@coxautoinc.com</email>
-            <organization>Cox Automotive</organization>
-            <organizationUrl>http://www.coxautoinc.com</organizationUrl>
-        </developer>
-        <developer>
-            <name>Moncef AOUDIA</name>
-            <email>mf.aoudia@gmail.com</email>
-        </developer>
-    </developers>
-    <licenses>
-        <license>
-            <name>MIT License</name>
-            <url>http://www.opensource.org/licenses/mit-license.php</url>
-        </license>
-    </licenses>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>bintray-sparow199-maven</id>
-            <name>sparow199-maven</name>
-            <url>https://api.bintray.com/maven/sparow199/maven/apollo-client-maven-plugin</url>
-        </snapshotRepository>
-
-        <!-- Released with: mvn release:clean release:prepare release:perform -B -e -P bintray -->
-        <repository>
-            <id>bintray-sparow199-maven</id>
-            <name>sparow199-maven</name>
-            <url>https://api.bintray.com/maven/sparow199/maven/apollo-client-maven-plugin/;publish=1</url>
-        </repository>
-    </distributionManagement>
-
-    <repositories>
-        <repository>
-            <id>jcenter</id>
-            <url>https://jcenter.bintray.com/</url>
-        </repository>
-    </repositories>
 </project>
