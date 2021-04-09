@@ -11,6 +11,9 @@ image:https://img.shields.io/maven-central/v/{project-groupId}/{project-artifact
 image:https://snyk.io/test/github/{project-owner}/{project-name}/badge.svg[Known Vulnerabilities,link=https://snyk.io/test/github/{project-owner}/{project-name}]
 image:https://img.shields.io/badge/License-MIT-yellow.svg[License: MIT,link=https://opensource.org/licenses/MIT]
 
+
+Maven plugin that calls the https://github.com/apollographql/apollo-android[Apollo Android compiler] to generate your Java/Kotlin sources.
+
 == Usage
 
 * A simple usage example can be found in https://github.com/{project-owner}/{project-name}/tree/master/apollo-client-maven-plugin-tests[plugin tests]
