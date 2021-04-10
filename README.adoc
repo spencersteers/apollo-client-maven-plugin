@@ -255,7 +255,9 @@ client.query(new GetBooksQuery())
 
 ==== Wrap ApolloCall with CompletableFuture
 
-If you miss *apolloCall.execute* method, which execute a query synchronously, you could wrap *apolloCall.enqueue* with a CompletableFuture and call *join* method to wait for the response
+If you miss *apolloCall.execute* method, which execute a query synchronously, you could wrap *apolloCall.enqueue* with a CompletableFuture and call *join* method to wait for the response.
+
+You could achieve the same thing as above with project https://projectreactor.io/docs/core/release/reference/[Reactor] using *Mono* type.
 
 [source,java]
 ----
@@ -283,6 +285,20 @@ public class ApolloClientUtils {
         });
 
         return completableFuture;
+    }
+
+    public static <T> Mono<Response<T>> toMono(ApolloCall<T> apolloCall) {
+        return Mono.create(sink -> apolloCall.enqueue(new ApolloCall.Callback<T>() {
+            @Override
+            public void onResponse(@NotNull Response<T> response) {
+                sink.success(response);
+            }
+
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                sink.error(e);
+            }
+        }));
     }
 }
 ----
