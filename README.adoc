@@ -263,7 +263,7 @@ You could achieve the same thing as above with project https://projectreactor.io
 ----
 public class ApolloClientUtils {
 
-    public static <T> CompletableFuture<Response<T>> toCompletableFuture(ApolloCall<T> apolloCall) {
+    public static <T> CompletableFuture<Response<T>> toCompletableFuture(@NotNull ApolloCall<T> apolloCall) {
         CompletableFuture<Response<T>> completableFuture = new CompletableFuture<>();
 
         completableFuture.whenComplete((tResponse, throwable) -> {
@@ -287,7 +287,7 @@ public class ApolloClientUtils {
         return completableFuture;
     }
 
-    public static <T> Mono<Response<T>> toMono(ApolloCall<T> apolloCall) {
+    public static <T> Mono<Response<T>> toMono(@NotNull ApolloCall<T> apolloCall) {
         return Mono.create(sink -> apolloCall.enqueue(new ApolloCall.Callback<T>() {
             @Override
             public void onResponse(@NotNull Response<T> response) {
