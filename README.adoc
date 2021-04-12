@@ -30,7 +30,7 @@ Maven plugin that calls the https://github.com/apollographql/apollo-android[Apol
    <dependency>
        <groupId>com.apollographql.apollo</groupId>
        <artifactId>apollo-runtime</artifactId>
-       <version>2.5.5</version>
+       <version>2.5.6</version>
    </dependency>
    <!-- Optional, needed only for ANNOTATED nullable type-->
    <dependency>
@@ -303,6 +303,6 @@ public class ApolloClientUtils {
 }
 ----
 
-==== Using Apollo without `apollo-runtime`
+==== Using Apollo without apollo-runtime
 
 See https://www.apollographql.com/docs/android/advanced/no-runtime/[documentation]
