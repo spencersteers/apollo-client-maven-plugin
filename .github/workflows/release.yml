@@ -45,21 +45,6 @@ jobs:
           git config user.email "${{ github.event.head_commit.committer.email }}"
           ./mvnw --no-transfer-progress -B --file pom.xml -Dmaven.site.skip=true -Drelease=true dependency:go-offline deploy
 
-      - name: Set up Java for publishing to GitHub Packages
-        continue-on-error: true
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: 8
-      - name: Publish to GitHub Packages
-        run: |
-          export GPG_TTY=$(tty)
-          git config user.name "${{ github.event.head_commit.committer.name }}"
-          git config user.email "${{ github.event.head_commit.committer.email }}"
-          ./mvnw --no-transfer-progress -B --file pom.xml -Dmaven.site.skip=true dependency:go-offline deploy
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Setup Java for JReleaser
         uses: actions/setup-java@v1
         with:
