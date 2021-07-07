@@ -55,16 +55,18 @@ Maven plugin that calls the https://github.com/apollographql/apollo-android[Apol
                 <goals>
                     <goal>generate</goal>
                 </goals>
-               <services>
-                   <example-api>
-                       <compilationUnit>
-                           <name>example</name>
-                           <compilerParams>
-                                <rootPackageName>com.example.graphql.client</rootPackageName>
-                           </compilerParams>
-                       </compilationUnit>
-                   </example-api>
-               </services>
+                <configuration>
+                    <services>
+                        <example-api>
+                            <compilationUnit>
+                                <name>example</name>
+                                <compilerParams>
+                                    <rootPackageName>com.example.graphql.client</rootPackageName>
+                                </compilerParams>
+                            </compilationUnit>
+                        </example-api>
+                    </services>
+                </configuration>
             </execution>
         </executions>
     </plugin>
