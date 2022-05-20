@@ -1,11 +1,10 @@
 package com.github.aoudiamoncef.apollo.plugin.util
 
-import com.apollographql.apollo.api.internal.json.JsonWriter
-import com.apollographql.apollo.compiler.fromJson
-import com.apollographql.apollo.compiler.parser.introspection.IntrospectionSchema
-import com.apollographql.apollo.compiler.parser.introspection.toSDL
+import com.apollographql.apollo3.compiler.fromJson
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.aoudiamoncef.apollo.plugin.util.ConfigUtils.isIntrospection
+import com.squareup.moshi.JsonWriter
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -36,7 +35,7 @@ object SchemaDownloader {
             okhttpClientBuilder.addInterceptor(GzipRequestInterceptor())
         }
 
-        return OkHttpClient.Builder()
+        return okhttpClientBuilder
             .connectTimeout(connectTimeoutSeconds, TimeUnit.SECONDS)
             .readTimeout(readTimeoutSeconds, TimeUnit.SECONDS)
             .writeTimeout(writeTimeoutSeconds, TimeUnit.SECONDS)
@@ -74,7 +73,7 @@ object SchemaDownloader {
                 }
             }
             .header("apollographql-client-name", "apollo-maven-plugin")
-            .header("apollographql-client-version", com.apollographql.apollo.compiler.VERSION)
+            .header("apollographql-client-version", com.apollographql.apollo3.compiler.APOLLO_VERSION)
             .url(url)
             .build()
 
@@ -150,25 +149,25 @@ object SchemaDownloader {
         writeResponse(schema, document, prettyPrint)
     }
 
-    inline fun <reified T> Any?.cast() = this as? T
+    private inline fun <reified T> Any?.cast() = this as? T
 
     private fun writeResponse(schema: File, response: Response, prettyPrint: Boolean) {
         schema.parentFile?.mkdirs()
         response.body.use { responseBody ->
-            if (schema.extension.toLowerCase() == "json") {
-                schema.writeText(pretify(responseBody!!.string(), prettyPrint))
+            if (schema.isIntrospection()) {
+                schema.writeText(pretify(responseBody?.string(), prettyPrint))
             } else {
-                IntrospectionSchema(pretify(responseBody!!.string(), prettyPrint).byteInputStream()).toSDL(schema)
+                responseBody?.let { schema.writeText(it.toString()) }
             }
         }
     }
 
     private fun writeResponse(schema: File, document: String?, prettyPrint: Boolean) {
         schema.parentFile?.mkdirs()
-        if (schema.extension.toLowerCase() == "json") {
+        if (schema.isIntrospection()) {
             schema.writeText(pretify(document, prettyPrint))
         } else {
-            IntrospectionSchema(pretify(document, prettyPrint).byteInputStream()).toSDL(schema)
+            document?.let { schema.writeText(it) }
         }
     }
 
@@ -177,12 +176,14 @@ object SchemaDownloader {
             throw IllegalArgumentException("document: is null or blank")
         }
         if (prettyPrint) {
-            val mapper = ObjectMapper()
             val json: JsonNode = mapper.readValue(document, JsonNode::class.java)
             return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json)
         }
-        return document.orEmpty()
+
+        return document
     }
+
+    private val mapper = ObjectMapper()
 
     private val introspectionQuery =
         """

@@ -1,5 +1,11 @@
 package com.github.aoudiamoncef.apollo.plugin.util
 
+import com.apollographql.apollo3.annotations.ApolloExperimental
+import com.apollographql.apollo3.ast.toUtf8
+import com.apollographql.apollo3.compiler.introspection.toGQLDocument
+import com.apollographql.apollo3.compiler.introspection.toIntrospectionSchema
+import com.apollographql.apollo3.compiler.introspection.toSchema
+import com.apollographql.apollo3.compiler.toJson
 import com.github.aoudiamoncef.apollo.plugin.config.CompilationUnit
 import com.github.aoudiamoncef.apollo.plugin.config.CompilerParams
 import com.github.aoudiamoncef.apollo.plugin.config.Introspection
@@ -56,6 +62,12 @@ object ConfigUtils {
         if (compilationUnit.outputDirectory == null) {
             compilationUnit.outputDirectory = BuildDirLayout.sources(project, compilationUnit)
         }
+        if (compilationUnit.debugDirectory == null) {
+            compilationUnit.debugDirectory = BuildDirLayout.debug(project, compilationUnit)
+        }
+        if (compilationUnit.testDirectory == null) {
+            compilationUnit.testDirectory = BuildDirLayout.test(project, compilationUnit)
+        }
 
         return compilationUnit
     }
@@ -97,16 +109,25 @@ object ConfigUtils {
     ): CompilerParams {
         compilerParams.rootFolders =
             if (compilerParams.rootFolders.isNotEmpty()) compilerParams.rootFolders else listOf(service.sourceFolder as File)
+
         if (compilerParams.metadataOutputFile == null) {
             compilerParams.metadataOutputFile = BuildDirLayout.metadata(project, service.compilationUnit)
         }
+
         if (compilerParams.generateApolloMetadata && compilerParams.alwaysGenerateTypesMatching.isEmpty()) {
             compilerParams.alwaysGenerateTypesMatching = setOf(".*")
         }
-        if (compilerParams.rootPackageName.isBlank()) {
-            if (compilerParams.packageName.isNullOrBlank()) {
-                compilerParams.rootPackageName = "${project.groupId}.apollo.client.${service.compilationUnit.name}"
+
+        if (compilerParams.packageName.isNullOrBlank()) {
+            if (compilerParams.schemaPackageName.isNotBlank()) {
+                compilerParams.packageName = compilerParams.schemaPackageName.removeSuffix("schema").plus("operation")
+            } else {
+                compilerParams.packageName = "${project.groupId}.apollo.client.${service.compilationUnit.name}.operation"
             }
+        }
+
+        if (compilerParams.schemaPackageName.isBlank()) {
+            compilerParams.schemaPackageName = "${project.groupId}.apollo.client.${service.compilationUnit.name}.schema"
         }
 
         return compilerParams
@@ -179,6 +200,17 @@ object ConfigUtils {
             }
 
             return candidates.firstOrNull()
+        }
+    }
+
+    fun File.isIntrospection() = extension == "json"
+
+    @OptIn(ApolloExperimental::class)
+    fun convert(from: File, to: File, prettyPrint: Boolean) {
+        if (from.isIntrospection()) {
+            from.toIntrospectionSchema().toGQLDocument().toUtf8(to)
+        } else {
+            from.toSchema().toIntrospectionSchema().toJson(to)
         }
     }
 }

@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.github.aoudiamoncef</groupId>
         <artifactId>apollo-client-maven-plugin-parent</artifactId>
-        <version>4.0.5</version>
+        <version>5.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -22,51 +22,73 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.apollographql.apollo</groupId>
-            <artifactId>apollo-runtime</artifactId>
+            <groupId>com.apollographql.apollo3</groupId>
+            <artifactId>apollo-api-jvm</artifactId>
+            <version>${apollo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.apollographql.apollo3</groupId>
+            <artifactId>apollo-runtime-jvm</artifactId>
+            <version>${apollo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
+            <version>${annotations.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <version>${jackson-databind.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.graphql-java</groupId>
             <artifactId>graphql-java-tools</artifactId>
+            <version>${graphql-java-tools.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.graphql-java</groupId>
             <artifactId>graphql-java-servlet</artifactId>
+            <version>${graphql-java-servlet.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-core</artifactId>
+            <version>${undertow.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.undertow</groupId>
             <artifactId>undertow-servlet</artifactId>
+            <version>${undertow.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
+            <version>${assertj-core.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j-simple.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -77,6 +99,7 @@
             <plugin>
                 <groupId>com.github.aoudiamoncef</groupId>
                 <artifactId>apollo-client-maven-plugin</artifactId>
+                <version>5.0.0-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <goals>
@@ -98,50 +121,54 @@
                                     <excludes>
                                         **/*.kakah
                                     </excludes>
-
                                     <compilationUnit>
                                         <name>books</name>
                                         <outputDirectory>
                                             ${project.build.directory}/generated-sources/graphql-client/books/
                                         </outputDirectory>
-                                        <generateOperationDescriptors>true</generateOperationDescriptors>
+                                        <testDirectory>
+                                            ${project.build.directory}/generated-sources/graphql-client/books/test/
+                                        </testDirectory>
+                                        <debugDirectory>
+                                            ${project.build.directory}/generated-sources/graphql-client/books/debug/
+                                        </debugDirectory>
                                         <operationOutputFile>
                                             ${project.build.directory}/generated/operationOutput/apollo/books/operationOutput.json
                                         </operationOutputFile>
-
+                                        <generateOperationDescriptors>false</generateOperationDescriptors>
                                         <compilerParams>
                                             <rootFolders>
                                                 <rootFolder>${project.basedir}/src/main/graphql/books/</rootFolder>
                                             </rootFolders>
                                             <generateKotlinModels>true</generateKotlinModels>
-                                            <warnOnDeprecatedUsages>true</warnOnDeprecatedUsages>
-                                            <failOnWarnings>false</failOnWarnings>
-                                            <generateOperationOutput>true</generateOperationOutput>
-                                            <customTypeMapping>
+                                            <customScalarsMapping>
                                                 <Long>java.lang.Long</Long>
-                                            </customTypeMapping>
-                                            <operationIdGeneratorClass>
-                                                com.apollographql.apollo.compiler.OperationIdGenerator$Sha256
-                                            </operationIdGeneratorClass>
-                                            <suppressRawTypesWarning>false</suppressRawTypesWarning>
-                                            <useSemanticNaming>true</useSemanticNaming>
-                                            <nullableValueType>ANNOTATED</nullableValueType>
-                                            <generateModelBuilder>true</generateModelBuilder>
-                                            <useJavaBeansSemanticNaming>false</useJavaBeansSemanticNaming>
-                                            <generateVisitorForPolymorphicDatatypes>true</generateVisitorForPolymorphicDatatypes>
-                                            <rootPackageName>com.lahzouz.apollo.graphql.client</rootPackageName>
-                                            <packageName></packageName>
+                                            </customScalarsMapping>
+                                            <operationIdGeneratorClass></operationIdGeneratorClass>
+                                            <schemaPackageName>com.lahzouz.apollo.graphql.client</schemaPackageName>
+                                            <packageName>com.lahzouz.apollo.graphql.client</packageName>
+                                            <codegenModels>OPERATION</codegenModels>
+                                            <flattenModels>true</flattenModels>
+                                            <generateApolloMetadata>false</generateApolloMetadata>
                                             <generateAsInternal>false</generateAsInternal>
+                                            <generateFilterNotNull>false</generateFilterNotNull>
+                                            <generateFragmentImplementations>false</generateFragmentImplementations>
+                                            <generateResponseFields>false</generateResponseFields>
+                                            <generateQueryDocument>true</generateQueryDocument>
+                                            <generateSchema>false</generateSchema>
+                                            <generateTestBuilders>false</generateTestBuilders>
+                                            <generateOptionalOperationVariables>false
+                                            </generateOptionalOperationVariables>
+                                            <useSemanticNaming>true</useSemanticNaming>
+                                            <moduleName>apollographql</moduleName>
+                                            <targetLanguage>KOTLIN_1_5</targetLanguage>
                                             <sealedClassesForEnumsMatching></sealedClassesForEnumsMatching>
-                                            <generateApolloMetadata>true</generateApolloMetadata>
+                                            <alwaysGenerateTypesMatching></alwaysGenerateTypesMatching>
                                             <metadataOutputFile>
                                                 ${project.build.directory}/generated/metadata/apollo/books/metadata.json
                                             </metadataOutputFile>
-                                            <alwaysGenerateTypesMatching></alwaysGenerateTypesMatching>
-                                            <kotlinMultiPlatformProject>false</kotlinMultiPlatformProject>
                                         </compilerParams>
                                     </compilationUnit>
-
                                     <introspection>
                                         <enabled>false</enabled>
                                         <endpointUrl></endpointUrl>
@@ -163,6 +190,7 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
                 <configuration>
                     <jvmTarget>${java.version}</jvmTarget>
                 </configuration>
@@ -186,6 +214,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>${version.surefire.plugin}</version>
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>

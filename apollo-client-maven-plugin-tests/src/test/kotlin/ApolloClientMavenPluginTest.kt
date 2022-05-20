@@ -1,13 +1,13 @@
 package com.lahzouz.java.graphql.client.tests
 
-import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.api.CustomTypeAdapter
-import com.apollographql.apollo.api.CustomTypeValue
+import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.*
+import com.apollographql.apollo3.api.json.JsonReader
+import com.apollographql.apollo3.api.json.JsonWriter
+import com.apollographql.apollo3.network.okHttpClient
 import com.coxautodev.graphql.tools.SchemaParser
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.lahzouz.apollo.graphql.client.queries.GetBooksQuery
-import com.lahzouz.apollo.graphql.client.queries.author.GetAuthorsQuery
-import com.lahzouz.apollo.graphql.client.type.CustomType
+import com.lahzouz.apollo.graphql.client.GetAuthorsQuery
+import com.lahzouz.apollo.graphql.client.GetBooksQuery
 import graphql.schema.GraphQLSchema
 import graphql.servlet.DefaultGraphQLSchemaProvider
 import graphql.servlet.GraphQLInvocationInputFactory
@@ -16,12 +16,9 @@ import io.undertow.Undertow
 import io.undertow.servlet.Servlets
 import io.undertow.servlet.util.ImmediateInstanceFactory
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
-import java.io.File
-import java.math.BigDecimal
 import java.net.InetSocketAddress
 import javax.servlet.Servlet
 
@@ -64,19 +61,25 @@ class ApolloClientMavenPluginTest {
         val inetSocketAddress: InetSocketAddress = server.listenerInfo[0].address as InetSocketAddress
         port = inetSocketAddress.port
 
-        val longCustomTypeAdapter = object : CustomTypeAdapter<Long> {
-            override fun encode(value: Long): CustomTypeValue<*> {
-                return CustomTypeValue.fromRawValue(value.toString())
+        val longCustomScalarTypeAdapter = object : Adapter<Long> {
+            override fun fromJson(reader: JsonReader, customScalarAdapters: CustomScalarAdapters): Long {
+                return customScalarAdapters.responseAdapterFor<Long>(com.lahzouz.apollo.graphql.client.type.Long.type).fromJson(
+                    reader,
+                    customScalarAdapters
+                )
             }
 
-            override fun decode(value: CustomTypeValue<*>): Long {
-                return (value.value as BigDecimal).toLong()
+            override fun toJson(writer: JsonWriter, customScalarAdapters: CustomScalarAdapters, value: Long) {
+                return customScalarAdapters.responseAdapterFor<Long>(com.lahzouz.apollo.graphql.client.type.Long.type).toJson(
+                    writer,
+                    customScalarAdapters, value
+                )
             }
         }
 
-        client = ApolloClient.builder()
+        client = ApolloClient.Builder()
             .serverUrl("http://127.0.0.1:$port/graphql")
-            .addCustomTypeAdapter(CustomType.LONG, longCustomTypeAdapter)
+            .addCustomScalarAdapter(com.lahzouz.apollo.graphql.client.type.Long.type, longCustomScalarTypeAdapter)
             .okHttpClient(OkHttpClient())
             .build()
     }
@@ -87,33 +90,16 @@ class ApolloClientMavenPluginTest {
     }
 
     @Test
-    @DisplayName("print introspection query results")
-    fun introspectionQueryTest() {
-        val mapper = ObjectMapper()
-        val data = mapper.readValue(
-            OkHttpClient().newCall(Request.Builder().url("http://127.0.0.1:$port/graphql/schema.json").build())
-                .execute()
-                .body?.byteStream(),
-            Map::class.java
-        )
-        assertThat(data).isNotEmpty
-
-        File("src/main/graphql/books/schema.json").writeText(
-            mapper.writerWithDefaultPrettyPrinter().writeValueAsString(data)
-        )
-    }
-
-    @Test
     @DisplayName("generated book query returns data")
-    fun bookQueryTest() {
-        val response = client.query(GetBooksQuery()).toCompletableFuture().join()
+    suspend fun bookQueryTest() {
+        val response = client.query(GetBooksQuery()).execute()
         assertThat(response.data?.books).isNotEmpty.hasSize(4)
     }
 
     @Test
     @DisplayName("generated author query returns data")
-    fun authorQueryTest() {
-        val response = client.query(GetAuthorsQuery()).toCompletableFuture().join()
+    suspend fun authorQueryTest() {
+        val response = client.query(GetAuthorsQuery()).execute()
         assertThat(response.data?.authors).isNotEmpty.hasSize(2)
     }
 

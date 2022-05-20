@@ -26,4 +26,20 @@ object BuildDirLayout {
             )
         )
     }
+
+    internal fun debug(project: MavenProject, compilationUnit: CompilationUnit): File {
+        return File(
+            project.build.directory.plus(
+                "/generated-sources/apollo/${compilationUnit.name}/debug"
+            )
+        )
+    }
+
+    internal fun test(project: MavenProject, compilationUnit: CompilationUnit): File {
+        return File(
+            project.build.directory.plus(
+                "/generated-sources/apollo/${compilationUnit.name}/test"
+            )
+        )
+    }
 }

@@ -1,8 +1,7 @@
 package com.github.aoudiamoncef.apollo.plugin
 
-import com.apollographql.apollo.compiler.GraphQLCompiler
-import com.apollographql.apollo.compiler.OperationIdGenerator
-import com.apollographql.apollo.compiler.OperationOutputGenerator
+import com.apollographql.apollo3.compiler.*
+import com.apollographql.apollo3.compiler.introspection.toSchema
 import com.github.aoudiamoncef.apollo.plugin.config.CompilationUnit
 import com.github.aoudiamoncef.apollo.plugin.config.Introspection
 import com.github.aoudiamoncef.apollo.plugin.config.Service
@@ -59,6 +58,10 @@ class GraphQLClientMojo : AbstractMojo() {
             return
         }
 
+        if (!this::services.isInitialized) {
+            log.error("Apollo GraphQL Client code generation failed because of wrong settings")
+        }
+
         log.info("Apollo GraphQL Client code generation task started")
         services.entries.forEach service@{
             if (!it.value.enabled) {
@@ -94,8 +97,8 @@ class GraphQLClientMojo : AbstractMojo() {
                         )
                     } else if (introspection.graph.isNotEmpty()) {
                         SchemaDownloader.downloadRegistry(
-                            schema = schema as File,
                             graph = introspection.graph,
+                            schema = schema as File,
                             key = introspection.key,
                             variant = introspection.graphVariant,
                             prettyPrint = introspection.prettyPrint,
@@ -113,7 +116,7 @@ class GraphQLClientMojo : AbstractMojo() {
             )
             val schemaMatcher: PathMatcher = FileSystems.getDefault().getPathMatcher("glob:**.{json,sdl,graphqls}")
             val directories = ConfigUtils.findFilesByMatcher(sourceSetFiles, schemaMatcher)
-            val schema = ConfigUtils.resolveSchema(
+            val resolveSchema = ConfigUtils.resolveSchema(
                 project = project,
                 schemaPath = service.schemaPath,
                 directories = directories,
@@ -128,43 +131,46 @@ class GraphQLClientMojo : AbstractMojo() {
                     ?: throw MojoExecutionException("No querie(s)/fragment(s) found")
 
             val operationOutputGenerator = if (compilerParams.operationIdGeneratorClass.isEmpty()) {
-                OperationOutputGenerator.DefaultOperationOuputGenerator(OperationIdGenerator.Sha256())
+                OperationOutputGenerator.Default(OperationIdGenerator.Sha256)
             } else {
                 val operationIdGenerator =
                     Class.forName(compilerParams.operationIdGeneratorClass).newInstance() as OperationIdGenerator
-                OperationOutputGenerator.DefaultOperationOuputGenerator(operationIdGenerator)
+                OperationOutputGenerator.Default(operationIdGenerator)
             }
 
-            val compiler = GraphQLCompiler()
-            compiler.write(
-                GraphQLCompiler.Arguments(
-                    rootFolders = compilerParams.rootFolders,
-                    graphqlFiles = graphqlFiles,
-                    schemaFile = schema,
+            val metadata = compilerParams.metadataFiles.toList().map { ApolloMetadata.readFrom(it).compilerMetadata }
+
+            ApolloCompiler.write(
+                Options(
+                    schema = resolveSchema!!.toSchema(),
                     outputDir = compilationUnit.outputDirectory as File,
-                    metadata = compilerParams.metadata,
-                    moduleName = compilerParams.moduleName,
-                    rootProjectDir = compilerParams.rootProjectDir,
-                    metadataOutputFile = compilerParams.metadataOutputFile as File,
-                    generateMetadata = compilerParams.generateApolloMetadata,
-                    alwaysGenerateTypesMatching = compilerParams.alwaysGenerateTypesMatching,
+                    testDir = compilationUnit.testDirectory as File,
+                    debugDir = compilationUnit.debugDirectory as File,
                     operationOutputFile = compilationUnit.operationOutputFile,
+                    executableFiles = graphqlFiles,
+                    schemaPackageName = compilerParams.schemaPackageName,
+                    packageNameGenerator = PackageNameGenerator.Flat(compilerParams.packageName as String),
+                    alwaysGenerateTypesMatching = compilerParams.alwaysGenerateTypesMatching,
                     operationOutputGenerator = operationOutputGenerator,
-                    rootPackageName = compilerParams.rootPackageName,
-                    packageName = compilerParams.packageName,
-                    generateKotlinModels = compilerParams.generateKotlinModels,
-                    customTypeMap = compilerParams.customTypeMapping,
+                    incomingCompilerMetadata = metadata,
+                    customScalarsMapping = compilerParams.customScalarsMapping,
+                    codegenModels = compilerParams.codegenModels.label,
+                    flattenModels = compilerParams.flattenModels,
                     useSemanticNaming = compilerParams.useSemanticNaming,
-                    generateAsInternal = compilerParams.generateAsInternal,
                     warnOnDeprecatedUsages = compilerParams.warnOnDeprecatedUsages,
                     failOnWarnings = compilerParams.failOnWarnings,
-                    kotlinMultiPlatformProject = compilerParams.kotlinMultiPlatformProject,
-                    enumAsSealedClassPatternFilters = compilerParams.sealedClassesForEnumsMatching,
-                    nullableValueType = compilerParams.nullableValueType,
-                    generateModelBuilder = compilerParams.generateModelBuilder,
-                    useJavaBeansSemanticNaming = compilerParams.useJavaBeansSemanticNaming,
-                    suppressRawTypesWarning = compilerParams.suppressRawTypesWarning,
-                    generateVisitorForPolymorphicDatatypes = compilerParams.generateVisitorForPolymorphicDatatypes
+                    logger = compilerParams.logger,
+                    generateAsInternal = compilerParams.generateAsInternal,
+                    generateFilterNotNull = compilerParams.generateFilterNotNull,
+                    generateFragmentImplementations = compilerParams.generateFragmentImplementations,
+                    generateResponseFields = compilerParams.generateResponseFields,
+                    generateQueryDocument = compilerParams.generateQueryDocument,
+                    generateSchema = compilerParams.generateSchema,
+                    moduleName = compilerParams.moduleName,
+                    targetLanguage = compilerParams.targetLanguage,
+                    generateTestBuilders = compilerParams.generateTestBuilders,
+                    sealedClassesForEnumsMatching = compilerParams.sealedClassesForEnumsMatching,
+                    generateOptionalOperationVariables = compilerParams.generateOptionalOperationVariables
                 )
             )
 
