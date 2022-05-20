@@ -1,8 +1,7 @@
 package com.github.aoudiamoncef.apollo.plugin.config
 
-import com.apollographql.apollo.api.ApolloExperimental
-import com.apollographql.apollo.compiler.NullableValueType
-import com.apollographql.apollo.compiler.OperationIdGenerator
+import com.apollographql.apollo3.annotations.ApolloExperimental
+import com.apollographql.apollo3.compiler.*
 import java.io.File
 
 /**
@@ -35,22 +34,11 @@ class CompilerParams {
     internal val failOnWarnings: Boolean = false
 
     /**
-     * Whether to generate operationOutput.json. operationOutput.json contains information such as
-     * operation id, name and complete source sent to the server. This can be used to upload
-     * a query's exact content to a server that doesn't support automatic persisted queries.
-     *
-     * The operation output is written in [CompilationUnit.operationOutputFile]
-     *
-     * Default value: false
-     */
-    internal val generateOperationOutput: Boolean = false
-
-    /**
-     * For custom scalar types like Date, map from the GraphQL type to the jvm/kotlin type.
+     * For custom scalar types like Date, map from the GraphQL type to the java/kotlin type.
      *
      * Default value: the empty map
      */
-    internal val customTypeMapping: Map<String, String> = emptyMap()
+    var customScalarsMapping: Map<String, String> = emptyMap()
 
     /**
      * By default, Apollo uses `Sha256` hashing algorithm to generate an ID for the query.
@@ -61,14 +49,6 @@ class CompilerParams {
     internal val operationIdGeneratorClass: String = ""
 
     /**
-     * The custom types code generate some warnings that might make the build fail.
-     * suppressRawTypesWarning will add the appropriate SuppressWarning annotation
-     *
-     * Default value: false
-     */
-    internal val suppressRawTypesWarning: Boolean = false
-
-    /**
      * When true, the generated classes names will end with 'Query' or 'Mutation'.
      * If you write `query droid { ... }`, the generated class will be named 'DroidQuery'.
      *
@@ -77,46 +57,13 @@ class CompilerParams {
     internal val useSemanticNaming: Boolean = true
 
     /**
-     * The nullable value type to use. One of: "annotated", "apolloOptional", "guavaOptional", "javaOptional", "inputType"
-     *
-     * Default value: "annotated"
-     * Only valid for java models as kotlin has proper nullability support
-     */
-    internal val nullableValueType: NullableValueType = NullableValueType.ANNOTATED
-
-    /**
-     * Whether to generate builders for java models
-     *
-     * Default value: false
-     * Only valid for java models as kotlin has data classes
-     */
-    internal val generateModelBuilder: Boolean = false
-
-    /**
-     * When true, java beans getters and setters will be generated for fields. If you request a field named 'user', the generated
-     * model will have a `getUser()` property instead of `user()`
-     *
-     * Default value: false
-     * Only valid for java as kotlin has properties
-     */
-    internal val useJavaBeansSemanticNaming: Boolean = false
-
-    /**
-     * Apollo Maven plugin supports generating visitors for compile-time safe handling of polymorphic datatypes.
-     * Enabling this requires source/target compatibility with Java 1.8.
-     *
-     * Default value: false
-     */
-    internal val generateVisitorForPolymorphicDatatypes: Boolean = false
-
-    /**
      * The package name of the models is computed from their folder hierarchy like for java sources.
      *
      * If you want, you can prepend a custom package name here to namespace your models.
      *
      * Default value: the empty string
      */
-    internal var rootPackageName: String = ""
+    internal var schemaPackageName: String = ""
 
     /**
      * Whether to generate Kotlin models with `internal` visibility modifier.
@@ -126,12 +73,14 @@ class CompilerParams {
     internal val generateAsInternal: Boolean = false
 
     /**
-     * A set of [Regex] patterns for GraphQL enums that should be generated as Kotlin sealed classes instead of the default Kotlin enums.
+     * A list of [Regex] patterns for GraphQL enums that should be generated as Kotlin sealed classes instead of the default Kotlin enums.
      *
      * Use this if you want your client to have access to the rawValue of the enum. This can be useful if new GraphQL enums are added but
      * the client was compiled against an older schema that doesn't have knowledge of the new enums.
+     *
+     * Default: emptyList()
      */
-    internal val sealedClassesForEnumsMatching: Set<String> = emptySet()
+    internal val sealedClassesForEnumsMatching: List<String> = emptyList()
 
     /**
      * Whether or not to generate Apollo metadata. Apollo metadata is used for multi-module support. Set this to true if you want other
@@ -141,7 +90,6 @@ class CompilerParams {
      *
      * Default value: false
      */
-    @ApolloExperimental
     internal val generateApolloMetadata: Boolean = false
 
     /**
@@ -159,18 +107,17 @@ class CompilerParams {
     internal var alwaysGenerateTypesMatching: Set<String> = setOf()
 
     /**
-     * Use the given package name and does not take into account the folders hierarchy.
+     * The package name of the models. The compiler will generate classes in
      *
-     * - Operations will be in `packageName`
-     * - Fragments will be in `packageName.fragment`
-     * - Input/Enum/Scalar types are not handled yet and will continue to be in the schemaPackageName
-     *
-     * This is currently experimental and this API might change in the future.
+     * - $packageName/SomeQuery.kt
+     * - $packageName/fragment/SomeFragment.kt
+     * - $packageName/type/CustomScalar.kt
+     * - $packageName/type/SomeInputObject.kt
+     * - $packageName/type/SomeEnum.kt
      *
      * Default value: ""
      */
-    @ApolloExperimental
-    internal var packageName: String? = null
+    internal var packageName: String? = ""
 
     /**
      * The rootFolders where the graphqlFiles are located. The package name of each individual graphql query
@@ -179,32 +126,104 @@ class CompilerParams {
     internal var rootFolders: List<File> = emptyList()
 
     /**
+     * Whether to generate default implementation classes for GraphQL fragments.
+     * Default value is `false`, means only interfaces are been generated.
+     *
+     * Most of the time, fragment implementations are not needed because you can easily access fragments interfaces and read all
+     * data from your queries. They are needed if you want to be able to build fragments outside an operation. For an exemple
+     * to programmatically build a fragment that is reused in another part of your code or to read and write fragments to the cache.
+     */
+    internal val generateFragmentImplementations: Boolean = false
+
+    /**
+     * Whether to embed the query document in the [com.apollographql.apollo3.api.Operation]s. By default this is true as it is needed
+     * to send the operations to the server.
+     * If performance is critical and you have a way to whitelist/read the document from another place, disable this.
+     */
+    internal val generateQueryDocument: Boolean = true
+
+    /**
+     * Whether to generate the __Schema class. The __Schema class lists all composite
+     * types in order to access __typename and/or possibleTypes
+     */
+    internal val generateSchema: Boolean = false
+
+    /**
+     * Whether to generate operation variables as [com.apollographql.apollo3.api.Optional]
+     *
+     * Using [com.apollographql.apollo3.api.Optional] allows to omit the variables if needed but makes the
+     * callsite more verbose in most cases.
+     *
+     * Default: true
+     */
+    internal val generateOptionalOperationVariables: Boolean = true
+
+    /**
+     * Kotlin native will generate [Any?] for optional types
+     * Setting generateFilterNotNull will generate extra `filterNotNull` functions that will help keep the type information
+     */
+    internal val generateFilterNotNull: Boolean = false
+
+    /**
+     * Whether to generate the compiled selections used to read/write from the normalized cache.
+     * Disable this option if you don't use the normalized cache to save some bytecode
+     */
+    internal val generateResponseFields: Boolean = false
+
+    /**
+     * Target language version for the generated code.
+     *
+     * Only valid when [generateKotlinModels] is `true`
+     * Must be either "KOTLIN_1_4" or "KOTLIN_1_5"
+     *
+     * Using an higher languageVersion allows generated code to use more language features like
+     * sealed interfaces in Kotlin 1.5 for an example.
+     *
+     * See also https://kotlinlang.org/docs/gradle.html#attributes-common-to-jvm-and-js
+     *
+     * Default: TargetLanguage.JAVA.
+     */
+    internal val targetLanguage: TargetLanguage = TargetLanguage.JAVA
+
+    /**
      * A list of files containing metadata from previous compilations
      */
     @ApolloExperimental
-    internal val metadata: List<File> = emptyList()
+    internal val metadataFiles: List<File> = emptyList()
+
+    /**
+     * Whether to generate the type safe Data builders. These are mainly used for tests but can also be used for other use
+     * cases too.
+     *
+     * Only valid when [generateKotlinModels] is true
+     */
+    internal val generateTestBuilders: Boolean = false
+
+    // TODO to be handled
+    /**
+     * What codegen to use. One of "OPERATION", "RESPONSE" or "COMPATIBILITY"
+     *
+     * Default value: "OPERATION"
+     */
+    internal val codegenModels: Codegen = Codegen.OPERATION
+
+    /**
+     * Whether to flatten the models. File paths are limited on MacOSX to 256 chars and flattening can help keeping the path length manageable
+     * The drawback is that some classes may nameclash in which case they will be suffixed with a number
+     *
+     * Default value: true for "operationBased" and "responseBased", false else
+     */
+    internal val flattenModels: Boolean = true
 
     /**
      * The moduleName for this metadata. Used for debugging purposes
      */
-    internal val moduleName: String = "?"
+    internal val moduleName: String = "apollographql"
 
-    /**
-     * Optional rootProjectDir. If it exists:
-     * - when writing metadata the compiler will output relative path to rootProjectDir
-     * - when reading metadata the compiler will lookup the actual file
-     * This allows to lookup the real fragment file if all compilation units belong to the same project
-     * and output nicer error messages
-     */
-    internal val rootProjectDir: File? = null
+    internal val logger: ApolloCompiler.Logger = ApolloCompiler.NoOpLogger
 
     /**
      * The file where to write the metadata
      */
     internal var metadataOutputFile: File? = null
-
-    /**
-     * Whether the project is Kotlin multi-platform
-     */
-    internal val kotlinMultiPlatformProject: Boolean = false
 }

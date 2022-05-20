@@ -22,7 +22,7 @@ class CompilationUnit {
     internal val generateOperationDescriptors: Boolean = false
 
     /**
-     * A json file containing a [Map]<[String], [com.apollographql.apollo.compiler.operationoutput.OperationDescriptor]>
+     * A json file containing a [Map]<[String], [com.apollographql.apollo3.compiler.operationoutput.OperationDescriptor]>
      */
     internal var operationOutputFile: File? = null
 
@@ -30,6 +30,16 @@ class CompilationUnit {
      * The directory where the generated models will be written
      */
     internal var outputDirectory: File? = null
+
+    /**
+     * The directory where to write the generated models test code
+     */
+    internal var testDirectory: File? = null
+
+    /**
+     * The directory where to write the generated models debug code
+     */
+    internal var debugDirectory: File? = null
 
     fun isCompilationparamsInitialised() = ::compilerParams.isInitialized
 }
