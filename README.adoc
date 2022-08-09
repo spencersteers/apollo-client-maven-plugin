@@ -19,6 +19,10 @@ Maven plugin that calls the https://github.com/apollographql/apollo-kotlin[Apoll
 
 * A complete project with https://github.com/{project-owner}/spring-boot-apollo-graphql[Spring Boot].
 
+=== Apollo 2 support
+
+* Go to support https://github.com/aoudiamoncef/apollo-client-maven-plugin/tree/support/apollo-2[branch].
+
 === Getting Started
 
 . Add the apollo runtime library to your project's dependencies:
