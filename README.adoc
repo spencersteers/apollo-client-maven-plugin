@@ -118,7 +118,7 @@ All plugin configuration properties and their defaults:
                     <rootFolders>
                         <rootFolder>${project.basedir}/src/main/graphql/lahzouz/</rootFolder>
                     </rootFolders>
-                    <customScalarsMapping></customScalarsMapping>
+                    <scalarsMapping></scalarsMapping>
                     <operationIdGeneratorClass></operationIdGeneratorClass>
                     <schemaPackageName>com.lahzouz.apollo.graphql.client</schemaPackageName>
                     <packageName>com.lahzouz.apollo.graphql.client</packageName>
@@ -134,7 +134,9 @@ All plugin configuration properties and their defaults:
                     <generateResponseFields>false</generateResponseFields>
                     <generateSchema>false</generateSchema>
                     <generateTestBuilders>false</generateTestBuilders>
-                    <moduleName>apollographql</moduleName>
+                    <generateDataBuilders>false</generateDataBuilders>
+                    <generateModelBuilders>false</generateModelBuilders>
+                    <nullableFieldStyle>NONE</nullableFieldStyle>
                     <useSemanticNaming>true</useSemanticNaming>
                     <targetLanguage>JAVA</targetLanguage>
                     <sealedClassesForEnumsMatching></sealedClassesForEnumsMatching>
@@ -180,9 +182,9 @@ define mapping configuration then register your custom adapter:
 ----
 <configuration>
     ...
-    <customScalarsMapping>
+    <scalarsMapping>
         <Long>java.time.LocalDate</Long>
-    </customScalarsMapping>
+    </scalarsMapping>
     ...
 </configuration>
 ----
