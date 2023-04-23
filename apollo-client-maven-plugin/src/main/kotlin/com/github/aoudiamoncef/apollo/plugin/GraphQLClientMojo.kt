@@ -140,6 +140,8 @@ class GraphQLClientMojo : AbstractMojo() {
 
             val metadata = compilerParams.metadataFiles.toList().map { ApolloMetadata.readFrom(it).compilerMetadata }
 
+            val scalarMapping = compilerParams.scalarsMapping.mapValues { ScalarInfo(it.value) }
+
             ApolloCompiler.write(
                 Options(
                     schema = resolveSchema!!.toSchema(),
@@ -153,7 +155,7 @@ class GraphQLClientMojo : AbstractMojo() {
                     alwaysGenerateTypesMatching = compilerParams.alwaysGenerateTypesMatching,
                     operationOutputGenerator = operationOutputGenerator,
                     incomingCompilerMetadata = metadata,
-                    customScalarsMapping = compilerParams.customScalarsMapping,
+                    scalarMapping = scalarMapping,
                     codegenModels = compilerParams.codegenModels.label,
                     flattenModels = compilerParams.flattenModels,
                     useSemanticNaming = compilerParams.useSemanticNaming,
@@ -166,9 +168,11 @@ class GraphQLClientMojo : AbstractMojo() {
                     generateResponseFields = compilerParams.generateResponseFields,
                     generateQueryDocument = compilerParams.generateQueryDocument,
                     generateSchema = compilerParams.generateSchema,
-                    moduleName = compilerParams.moduleName,
                     targetLanguage = compilerParams.targetLanguage,
                     generateTestBuilders = compilerParams.generateTestBuilders,
+                    generateModelBuilders = compilerParams.generateModelBuilders,
+                    generateDataBuilders = compilerParams.generateDataBuilders,
+                    nullableFieldStyle = compilerParams.nullableFieldStyle,
                     sealedClassesForEnumsMatching = compilerParams.sealedClassesForEnumsMatching,
                     generateOptionalOperationVariables = compilerParams.generateOptionalOperationVariables
                 )

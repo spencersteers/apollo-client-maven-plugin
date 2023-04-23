@@ -38,7 +38,7 @@ class CompilerParams {
      *
      * Default value: the empty map
      */
-    var customScalarsMapping: Map<String, String> = emptyMap()
+    var scalarsMapping: Map<String, String> = emptyMap()
 
     /**
      * By default, Apollo uses `Sha256` hashing algorithm to generate an ID for the query.
@@ -199,6 +199,43 @@ class CompilerParams {
      */
     internal val generateTestBuilders: Boolean = false
 
+    /**
+     * Whether to generate the type safe Data builders. These are mainly used for tests but can also be used for other use
+     * cases too.
+     *
+     * Only valid when [generateKotlinModels] is true
+     */
+    internal val generateDataBuilders: Boolean = false
+
+    /**
+     * Whether to generate builders for java models
+     *
+     * Default value: false
+     * Only valid when [generateKotlinModels] is false
+     */
+    internal val generateModelBuilders: Boolean = false
+
+    /**
+     * The style to use for fields that are nullable in the Java generated code.
+     *
+     * Only valid when [targetLanguage] is [TargetLanguage.JAVA]
+     *
+     * Acceptable values:
+     * - `none`: Fields will be generated with the same type whether they are nullable or not
+     * - `apolloOptional`: Fields will be generated as Apollo's `com.apollographql.apollo3.api.Optional<Type>` if nullable, or `Type` if not.
+     * - `javaOptional`: Fields will be generated as Java's `java.util.Optional<Type>` if nullable, or `Type` if not.
+     * - `guavaOptional`: Fields will be generated as Guava's `com.google.common.base.Optional<Type>` if nullable, or `Type` if not.
+     * - `jetbrainsAnnotations`: Fields will be generated with Jetbrain's `org.jetbrains.annotations.Nullable` annotation if nullable, or
+     * `org.jetbrains.annotations.NotNull` if not.
+     * - `androidAnnotations`: Fields will be generated with Android's `androidx.annotation.Nullable` annotation if nullable, or
+     * `androidx.annotation.NonNull` if not.
+     * - `jsr305Annotations`: Fields will be generated with JSR 305's `javax.annotation.Nullable` annotation if nullable, or
+     * `javax.annotation.Nonnull` if not.
+     *
+     * Default: `none`
+     */
+    internal val nullableFieldStyle: JavaNullable = JavaNullable.NONE
+
     // TODO to be handled
     /**
      * What codegen to use. One of "OPERATION", "RESPONSE" or "COMPATIBILITY"
@@ -214,11 +251,6 @@ class CompilerParams {
      * Default value: true for "operationBased" and "responseBased", false else
      */
     internal val flattenModels: Boolean = true
-
-    /**
-     * The moduleName for this metadata. Used for debugging purposes
-     */
-    internal val moduleName: String = "apollographql"
 
     internal val logger: ApolloCompiler.Logger = ApolloCompiler.NoOpLogger
 

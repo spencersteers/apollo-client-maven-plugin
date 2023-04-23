@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.github.aoudiamoncef</groupId>
         <artifactId>apollo-client-maven-plugin-parent</artifactId>
-        <version>5.0.0</version>
+        <version>6.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -99,7 +99,7 @@
             <plugin>
                 <groupId>com.github.aoudiamoncef</groupId>
                 <artifactId>apollo-client-maven-plugin</artifactId>
-                <version>5.0.0</version>
+                <version>6.0.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -141,9 +141,9 @@
                                                 <rootFolder>${project.basedir}/src/main/graphql/books/</rootFolder>
                                             </rootFolders>
                                             <generateKotlinModels>true</generateKotlinModels>
-                                            <customScalarsMapping>
+                                            <scalarsMapping>
                                                 <Long>java.lang.Long</Long>
-                                            </customScalarsMapping>
+                                            </scalarsMapping>
                                             <operationIdGeneratorClass></operationIdGeneratorClass>
                                             <schemaPackageName>com.lahzouz.apollo.graphql.client</schemaPackageName>
                                             <packageName>com.lahzouz.apollo.graphql.client</packageName>
@@ -159,8 +159,8 @@
                                             <generateTestBuilders>false</generateTestBuilders>
                                             <generateOptionalOperationVariables>false
                                             </generateOptionalOperationVariables>
+                                            <nullableFieldStyle>NONE</nullableFieldStyle>
                                             <useSemanticNaming>true</useSemanticNaming>
-                                            <moduleName>apollographql</moduleName>
                                             <targetLanguage>KOTLIN_1_5</targetLanguage>
                                             <sealedClassesForEnumsMatching></sealedClassesForEnumsMatching>
                                             <alwaysGenerateTypesMatching></alwaysGenerateTypesMatching>
