@@ -26,7 +26,7 @@ import java.nio.file.PathMatcher
     requiresDependencyCollection = ResolutionScope.COMPILE,
     requiresDependencyResolution = ResolutionScope.COMPILE,
     defaultPhase = LifecyclePhase.GENERATE_SOURCES,
-    threadSafe = true
+    threadSafe = true,
 )
 class GraphQLClientMojo : AbstractMojo() {
 
@@ -85,7 +85,7 @@ class GraphQLClientMojo : AbstractMojo() {
                         readTimeoutSeconds = introspection.readTimeoutSeconds,
                         writeTimeoutSeconds = introspection.writeTimeoutSeconds,
                         useSelfSignedCertificat = introspection.useSelfSignedCertificat,
-                        useGzip = introspection.useGzip
+                        useGzip = introspection.useGzip,
                     )
                     if (introspection.endpointUrl.isNotEmpty()) {
                         SchemaDownloader.downloadIntrospection(
@@ -93,7 +93,7 @@ class GraphQLClientMojo : AbstractMojo() {
                             endpoint = introspection.endpointUrl,
                             headers = introspection.headers,
                             prettyPrint = introspection.prettyPrint,
-                            okHttpClient = okHttpClient
+                            okHttpClient = okHttpClient,
                         )
                     } else if (introspection.graph.isNotEmpty()) {
                         SchemaDownloader.downloadRegistry(
@@ -102,7 +102,7 @@ class GraphQLClientMojo : AbstractMojo() {
                             key = introspection.key,
                             variant = introspection.graphVariant,
                             prettyPrint = introspection.prettyPrint,
-                            okHttpClient = okHttpClient
+                            okHttpClient = okHttpClient,
                         )
                     }
                 }
@@ -112,7 +112,7 @@ class GraphQLClientMojo : AbstractMojo() {
             val sourceSetFiles = ConfigUtils.getSourceSetFiles(
                 sourceFolder = service.sourceFolder as File,
                 includes = service.includes,
-                excludes = service.excludes
+                excludes = service.excludes,
             )
             val schemaMatcher: PathMatcher = FileSystems.getDefault().getPathMatcher("glob:**.{json,sdl,graphqls}")
             val directories = ConfigUtils.findFilesByMatcher(sourceSetFiles, schemaMatcher)
@@ -120,7 +120,7 @@ class GraphQLClientMojo : AbstractMojo() {
                 project = project,
                 schemaPath = service.schemaPath,
                 directories = directories,
-                sourceSetFiles = sourceSetFiles
+                sourceSetFiles = sourceSetFiles,
             )
 
             log.info("Read querie(s)/fragment(s) files")
@@ -174,8 +174,8 @@ class GraphQLClientMojo : AbstractMojo() {
                     generateDataBuilders = compilerParams.generateDataBuilders,
                     nullableFieldStyle = compilerParams.nullableFieldStyle,
                     sealedClassesForEnumsMatching = compilerParams.sealedClassesForEnumsMatching,
-                    generateOptionalOperationVariables = compilerParams.generateOptionalOperationVariables
-                )
+                    generateOptionalOperationVariables = compilerParams.generateOptionalOperationVariables,
+                ),
             )
 
             if (service.addSourceRoot) {

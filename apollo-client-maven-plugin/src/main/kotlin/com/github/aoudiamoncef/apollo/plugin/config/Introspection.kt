@@ -16,6 +16,7 @@ class Introspection {
      * Whether to enable JSon schema pretty print
      */
     internal val prettyPrint: Boolean = false
+
     /**
      * The HTTP endpoint url
      *

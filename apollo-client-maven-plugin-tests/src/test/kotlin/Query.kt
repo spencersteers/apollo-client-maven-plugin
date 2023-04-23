@@ -15,7 +15,7 @@ class Query : GraphQLQueryResolver {
             Book(title = "A Christmas Carol", author = dickens, id = 1L),
             Book(title = "David Copperfield", author = dickens, id = 2L),
             Book(title = "The Adventures of Tom Sawyer", author = twain, id = 3L),
-            Book(title = "Adventures of Huckleberry Finn", author = twain, id = 4L)
+            Book(title = "Adventures of Huckleberry Finn", author = twain, id = 4L),
         )
     }
 

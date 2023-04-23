@@ -7,39 +7,39 @@ import java.io.File
 object BuildDirLayout {
     internal fun operationOuput(project: MavenProject, compilationUnit: CompilationUnit): File {
         return File(
-            project.build.directory.plus("/generated/operationOutput/apollo/${compilationUnit.name}/operationOutput.json")
+            project.build.directory.plus("/generated/operationOutput/apollo/${compilationUnit.name}/operationOutput.json"),
         )
     }
 
     internal fun metadata(project: MavenProject, compilationUnit: CompilationUnit): File {
         return File(
             project.build.directory.plus(
-                "/generated/metadata/apollo/${compilationUnit.name}/metadata.json"
-            )
+                "/generated/metadata/apollo/${compilationUnit.name}/metadata.json",
+            ),
         )
     }
 
     internal fun sources(project: MavenProject, compilationUnit: CompilationUnit): File {
         return File(
             project.build.directory.plus(
-                "/generated-sources/apollo/${compilationUnit.name}"
-            )
+                "/generated-sources/apollo/${compilationUnit.name}",
+            ),
         )
     }
 
     internal fun debug(project: MavenProject, compilationUnit: CompilationUnit): File {
         return File(
             project.build.directory.plus(
-                "/generated-sources/apollo/${compilationUnit.name}/debug"
-            )
+                "/generated-sources/apollo/${compilationUnit.name}/debug",
+            ),
         )
     }
 
     internal fun test(project: MavenProject, compilationUnit: CompilationUnit): File {
         return File(
             project.build.directory.plus(
-                "/generated-sources/apollo/${compilationUnit.name}/test"
-            )
+                "/generated-sources/apollo/${compilationUnit.name}/test",
+            ),
         )
     }
 }

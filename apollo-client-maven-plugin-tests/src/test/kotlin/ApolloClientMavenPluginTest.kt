@@ -15,12 +15,12 @@ import graphql.servlet.SimpleGraphQLHttpServlet
 import io.undertow.Undertow
 import io.undertow.servlet.Servlets
 import io.undertow.servlet.util.ImmediateInstanceFactory
+import jakarta.servlet.Servlet
 import okhttp3.OkHttpClient
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import java.net.InetSocketAddress
-import javax.servlet.Servlet
 
 @TestInstance(PER_CLASS)
 class ApolloClientMavenPluginTest {
@@ -31,7 +31,6 @@ class ApolloClientMavenPluginTest {
 
     @BeforeAll
     fun setupSpec() {
-
         val libSchema = SchemaParser.newParser()
             .file("schema.graphqls")
             .resolvers(Query())
@@ -46,9 +45,10 @@ class ApolloClientMavenPluginTest {
             .setDeploymentName("test")
             .addServlets(
                 Servlets.servlet(
-                    "GraphQLServlet", SimpleGraphQLHttpServlet::class.java,
-                    ImmediateInstanceFactory(servlet as Servlet)
-                ).addMapping("/graphql/*")
+                    "GraphQLServlet",
+                    Servlet::class.java,
+                    ImmediateInstanceFactory(servlet as Servlet),
+                ).addMapping("/graphql/*"),
             )
 
         val manager = Servlets.defaultContainer().addDeployment(servletBuilder)
@@ -65,14 +65,15 @@ class ApolloClientMavenPluginTest {
             override fun fromJson(reader: JsonReader, customScalarAdapters: CustomScalarAdapters): Long {
                 return customScalarAdapters.responseAdapterFor<Long>(com.lahzouz.apollo.graphql.client.type.Long.type).fromJson(
                     reader,
-                    customScalarAdapters
+                    customScalarAdapters,
                 )
             }
 
             override fun toJson(writer: JsonWriter, customScalarAdapters: CustomScalarAdapters, value: Long) {
                 return customScalarAdapters.responseAdapterFor<Long>(com.lahzouz.apollo.graphql.client.type.Long.type).toJson(
                     writer,
-                    customScalarAdapters, value
+                    customScalarAdapters,
+                    value,
                 )
             }
         }

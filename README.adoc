@@ -4,7 +4,7 @@
 :project-name:       apollo-client-maven-plugin
 :project-groupId:    com.github.aoudiamoncef
 :project-artifactId: apollo-client-maven-plugin-parent
-:project-version:    5.0.0
+:project-version:    6.0.0
 
 image:https://github.com/{project-owner}/{project-name}/workflows/Build/badge.svg["Build Status",link="https://github.com/{project-owner}/{project-name}/actions"]
 image:https://img.shields.io/maven-central/v/{project-groupId}/{project-artifactId}.svg[Download,link="https://search.maven.org/#search|ga|1|g:{project-groupId} AND a:{project-artifactId}"]

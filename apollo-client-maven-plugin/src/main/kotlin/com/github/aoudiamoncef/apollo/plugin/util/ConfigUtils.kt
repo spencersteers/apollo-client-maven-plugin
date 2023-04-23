@@ -38,7 +38,7 @@ object ConfigUtils {
     internal fun checkCompilationUnit(
         project: MavenProject,
         serviceName: String,
-        compilationUnit: CompilationUnit
+        compilationUnit: CompilationUnit,
     ): CompilationUnit {
         compilationUnit.compilerParams =
             if (compilationUnit.isCompilationparamsInitialised()) compilationUnit.compilerParams else CompilerParams()
@@ -74,7 +74,7 @@ object ConfigUtils {
 
     internal fun checkIntrospection(
         project: MavenProject,
-        service: Service
+        service: Service,
     ): Introspection {
         val introspection = service.introspection
         if (introspection.enabled) {
@@ -105,7 +105,7 @@ object ConfigUtils {
     internal fun checkCompilerParams(
         project: MavenProject,
         service: Service,
-        compilerParams: CompilerParams
+        compilerParams: CompilerParams,
     ): CompilerParams {
         compilerParams.rootFolders =
             if (compilerParams.rootFolders.isNotEmpty()) compilerParams.rootFolders else listOf(service.sourceFolder as File)
@@ -157,7 +157,7 @@ object ConfigUtils {
         project: MavenProject,
         schemaPath: String,
         directories: Set<File>,
-        sourceSetFiles: Set<File>
+        sourceSetFiles: Set<File>,
     ): File? {
         if (schemaPath.isNotBlank()) {
             when {
@@ -173,9 +173,9 @@ object ConfigUtils {
                     }
                     require(sourceSetFiles.size == 1) {
                         "ApolloGraphQL: cannot find a schema file at $schemaPath. Tried:\n${
-                        sourceSetFiles.joinToString(
-                            "\n"
-                        ) { it.absolutePath }
+                            sourceSetFiles.joinToString(
+                                "\n",
+                            ) { it.absolutePath }
                         }"
                     }
 
@@ -192,10 +192,10 @@ object ConfigUtils {
             require(candidates.size <= 1) {
                 throw MojoExecutionException(
                     "duplicate Schema : ${
-                    candidates.map { it }.joinToString(
-                        ","
-                    )
-                    }"
+                        candidates.map { it }.joinToString(
+                            ",",
+                        )
+                    }",
                 )
             }
 

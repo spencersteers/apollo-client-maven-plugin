@@ -23,7 +23,7 @@ object SchemaDownloader {
         readTimeoutSeconds: Long,
         writeTimeoutSeconds: Long,
         useSelfSignedCertificat: Boolean,
-        useGzip: Boolean
+        useGzip: Boolean,
     ): OkHttpClient {
         val okhttpClientBuilder = if (useSelfSignedCertificat) {
             UnsafeOkHttpClient.getUnsafeOkHttpClient()
@@ -47,7 +47,7 @@ object SchemaDownloader {
         variables: String? = null,
         url: String,
         headers: Map<String, String>,
-        okHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
     ): Response {
         val byteArrayOutputStream = ByteArrayOutputStream()
         JsonWriter.of(byteArrayOutputStream.sink().buffer())
@@ -91,9 +91,8 @@ object SchemaDownloader {
         schema: File,
         headers: Map<String, String>,
         prettyPrint: Boolean,
-        okHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
     ) {
-
         val response = executeQuery(introspectionQuery, null, endpoint, headers, okHttpClient)
 
         writeResponse(schema, response, prettyPrint)
@@ -105,7 +104,7 @@ object SchemaDownloader {
         key: String,
         variant: String,
         prettyPrint: Boolean,
-        okHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
     ) {
         val query =
             """
