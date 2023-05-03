@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.github.aoudiamoncef</groupId>
         <artifactId>apollo-client-maven-plugin-parent</artifactId>
-        <version>6.0.0</version>
+        <version>7.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -99,7 +99,7 @@
             <plugin>
                 <groupId>com.github.aoudiamoncef</groupId>
                 <artifactId>apollo-client-maven-plugin</artifactId>
-                <version>6.0.0</version>
+                <version>7.0.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -142,7 +142,9 @@
                                             </rootFolders>
                                             <generateKotlinModels>true</generateKotlinModels>
                                             <scalarsMapping>
-                                                <Long>java.lang.Long</Long>
+                                                <Long>
+                                                    <targetName>java.lang.Long</targetName>
+                                                </Long>
                                             </scalarsMapping>
                                             <operationIdGeneratorClass></operationIdGeneratorClass>
                                             <schemaPackageName>com.lahzouz.apollo.graphql.client</schemaPackageName>

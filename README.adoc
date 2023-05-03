@@ -90,6 +90,7 @@ All plugin configuration properties and their defaults:
         <lahzouz-complete-api>
             <enabled>true</enabled>
             <addSourceRoot>true</addSourceRoot>
+            <addTestSourceRoot>false</addTestSourceRoot>
             <sourceFolder>${project.basedir}/src/main/graphql/lahzouz</sourceFolder>
             <schemaPath>${project.basedir}/src/main/graphql/lahzouz/schema.json</schemaPath>
             <includes>
@@ -193,24 +194,52 @@ Implementation of a custom adapter for `java.time.LocalDate`:
 
 [source,java]
 ----
-public class DateGraphQLAdapter implements Adapter<Date> {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-
+public class LocalDateGraphQLAdapter implements Adapter<LocalDate> {
     @Override
-    public Date fromJson(@NotNull final JsonReader jsonReader, @NotNull final CustomScalarAdapters customScalarAdapters) throws IOException {
-        try {
-            return DATE_FORMAT.parse(jsonReader.nextString());
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+    public LocalDate fromJson(@NotNull final JsonReader reader, @NotNull final CustomScalarAdapters customScalarAdapters) throws IOException {
+        return LocalDate.parse(reader.nextString());
     }
 
     @Override
-    public void toJson(@NotNull final JsonWriter jsonWriter, @NotNull final CustomScalarAdapters customScalarAdapters, final Date date) throws IOException {
-        jsonWriter.value(DATE_FORMAT.format(date));
+    public void toJson(@NotNull final JsonWriter writer, @NotNull final CustomScalarAdapters customScalarAdapters, final LocalDate value) throws IOException {
+        writer.value(value.toString());
     }
 }
 ----
+
+[source,xml]
+----
+<configuration>
+    ...
+    <scalarsMapping>
+        <Date>
+            <targetName>java.time.LocalDate</targetName>
+            <expression>new com.example.LocalDateGraphQLAdapter()</expression>
+        </Date>
+    </scalarsMapping>
+    ...
+</configuration>
+----
+
+==== Test Sources
+
+To generate sources for tests:
+[source,xml]
+----
+<configuration>
+    ...
+    <addSourceRoot>false</addSourceRoot>
+    <addTestSourceRoot>true</addTestSourceRoot>
+    <compilationUnit>
+        <name>example</name>
+        <outputDirectory>${project.basedir}/target/generated-test-sources/apollo/example</outputDirectory>
+        <debugDirectory>${project.basedir}/target/generated-test-sources/apollo/example/debug</debugDirectory>
+        <testDirectory>${project.basedir}/target/generated-test-sources/apollo/example/debug</testDirectory>
+    <compilationUnit/>
+    ...
+</configuration>
+----
+
 
 === Using Apollo Client
 

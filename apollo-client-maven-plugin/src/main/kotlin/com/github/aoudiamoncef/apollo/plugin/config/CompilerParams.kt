@@ -38,7 +38,7 @@ class CompilerParams {
      *
      * Default value: the empty map
      */
-    var scalarsMapping: Map<String, String> = emptyMap()
+    var scalarsMapping: Map<String, ScalarMapping> = emptyMap()
 
     /**
      * By default, Apollo uses `Sha256` hashing algorithm to generate an ID for the query.
