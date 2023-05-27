@@ -33,7 +33,7 @@ Maven plugin that calls the https://github.com/apollographql/apollo-kotlin[Apoll
    <dependency>
        <groupId>com.apollographql.apollo3</groupId>
        <artifactId>apollo-runtime</artifactId>
-       <version>3.0.0</version>
+       <version>3.8.1</version>
    </dependency>
 </dependencies>
 ----
@@ -77,6 +77,22 @@ At build time, the plugin will query the server and install this file per the va
 .. Query files must end with `.graphql` OR `.gql` by default.
 .. Any subdirectories under `src/main/graphql/SERVICE_NAME` are treated as extra package names to append to `schemaPackageName` in the plugin config.
 . Run `mvn generate-sources` to generate classes for your queries.
+
+. If you run into compilation issues such as `package com.apollographql.apollo3.api does not exist`, you may need to explicitly add the following runtime libraries to your pom.xml
++
+[source,xml]
+---
+<dependency>
+      <groupId>com.apollographql.apollo3</groupId>
+      <artifactId>apollo-api-jvm</artifactId>
+      <version>3.8.1</version>
+</dependency>
+ <dependency>
+    <groupId>com.apollographql.apollo3</groupId>
+    <artifactId>apollo-runtime-jvm</artifactId>
+    <version>3.8.1</version>
+</dependency>
+---
 
 === Configuration Options
 
