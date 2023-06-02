@@ -18,6 +18,11 @@ class Service {
     internal val addSourceRoot: Boolean = true
 
     /**
+     * Whether to add generated sources to root
+     */
+    internal val addTestSourceRoot: Boolean = false
+
+    /**
      * Configures the [CompilationUnit]
      */
     internal lateinit var compilationUnit: CompilationUnit

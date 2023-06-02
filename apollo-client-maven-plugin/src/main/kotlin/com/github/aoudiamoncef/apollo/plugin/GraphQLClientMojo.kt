@@ -140,7 +140,13 @@ class GraphQLClientMojo : AbstractMojo() {
 
             val metadata = compilerParams.metadataFiles.toList().map { ApolloMetadata.readFrom(it).compilerMetadata }
 
-            val scalarMapping = compilerParams.scalarsMapping.mapValues { ScalarInfo(it.value) }
+            val scalarMapping = compilerParams.scalarsMapping
+                .mapValues { scalarMapping ->
+                    when (val expression = scalarMapping.value.expression) {
+                        null -> ScalarInfo(scalarMapping.value.targetName)
+                        else -> ScalarInfo(scalarMapping.value.targetName, ExpressionAdapterInitializer(expression))
+                    }
+                }
 
             ApolloCompiler.write(
                 Options(
@@ -182,6 +188,12 @@ class GraphQLClientMojo : AbstractMojo() {
                 val generatedSourcePath = compilationUnit.outputDirectory?.canonicalPath
                 log.info("Add the compiled sources from $generatedSourcePath to project root")
                 project.addCompileSourceRoot(generatedSourcePath)
+            }
+
+            if (service.addTestSourceRoot) {
+                val generatedSourcePath = compilationUnit.outputDirectory?.canonicalPath
+                log.info("Add the test compiled sources from $generatedSourcePath to project root")
+                project.addTestCompileSourceRoot(generatedSourcePath)
             }
         }
         log.info("Apollo GraphQL Client code generation task finished")
