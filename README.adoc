@@ -33,7 +33,7 @@ Maven plugin that calls the https://github.com/apollographql/apollo-kotlin[Apoll
    <dependency>
        <groupId>com.apollographql.apollo3</groupId>
        <artifactId>apollo-runtime</artifactId>
-       <version>3.8.1</version>
+       <version>3.8.2</version>
    </dependency>
 </dependencies>
 ----
@@ -85,12 +85,12 @@ At build time, the plugin will query the server and install this file per the va
 <dependency>
       <groupId>com.apollographql.apollo3</groupId>
       <artifactId>apollo-api-jvm</artifactId>
-      <version>3.8.1</version>
+      <version>3.8.2</version>
 </dependency>
  <dependency>
     <groupId>com.apollographql.apollo3</groupId>
     <artifactId>apollo-runtime-jvm</artifactId>
-    <version>3.8.1</version>
+    <version>3.8.2</version>
 </dependency>
 ---
 
