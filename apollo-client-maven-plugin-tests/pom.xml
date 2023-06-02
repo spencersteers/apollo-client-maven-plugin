@@ -132,9 +132,6 @@
                                         <debugDirectory>
                                             ${project.build.directory}/generated-sources/graphql-client/books/debug/
                                         </debugDirectory>
-                                        <operationOutputFile>
-                                            ${project.build.directory}/generated/operationOutput/apollo/books/operationOutput.json
-                                        </operationOutputFile>
                                         <generateOperationDescriptors>false</generateOperationDescriptors>
                                         <compilerParams>
                                             <rootFolders>

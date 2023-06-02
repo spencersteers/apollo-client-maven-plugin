@@ -154,7 +154,6 @@ class GraphQLClientMojo : AbstractMojo() {
                     outputDir = compilationUnit.outputDirectory as File,
                     testDir = compilationUnit.testDirectory as File,
                     debugDir = compilationUnit.debugDirectory as File,
-                    operationOutputFile = compilationUnit.operationOutputFile,
                     executableFiles = graphqlFiles,
                     schemaPackageName = compilerParams.schemaPackageName,
                     packageNameGenerator = PackageNameGenerator.Flat(compilerParams.packageName as String),
