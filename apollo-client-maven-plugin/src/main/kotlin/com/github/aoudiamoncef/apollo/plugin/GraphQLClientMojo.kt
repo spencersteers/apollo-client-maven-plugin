@@ -180,6 +180,7 @@ class GraphQLClientMojo : AbstractMojo() {
                     nullableFieldStyle = compilerParams.nullableFieldStyle,
                     sealedClassesForEnumsMatching = compilerParams.sealedClassesForEnumsMatching,
                     generateOptionalOperationVariables = compilerParams.generateOptionalOperationVariables,
+                    addTypename = compilerParams.addTypename,
                 ),
             )
 

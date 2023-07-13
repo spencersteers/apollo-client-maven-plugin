@@ -258,4 +258,6 @@ class CompilerParams {
      * The file where to write the metadata
      */
     internal var metadataOutputFile: File? = null
+
+    internal val addTypename: String  = ADD_TYPENAME_IF_FRAGMENTS
 }
